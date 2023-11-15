@@ -39,11 +39,11 @@ def visualize_pkl(out, exp_num, interpolate_params=False, assigned_anchor=None):
     pcd.points = o3d.utility.Vector3dVector(pc)
     
     pcd.colors = o3d.utility.Vector3dVector(normalize(pc))
-    text_pcd = text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
+    # text_pcd = text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
     vis = o3d.visualization.VisualizerWithKeyCallback()
     vis.create_window(visible=True) #works for me with False, on some systems needs to be true
     vis.add_geometry(pcd)
-    vis.add_geometry(text_pcd)
+    # vis.add_geometry(text_pcd)
     view_contrl = vis.get_view_control()
     view_contrl.rotate(*view_dict['top'])
     view_params = view_contrl.convert_to_pinhole_camera_parameters()
@@ -147,10 +147,10 @@ def visualize_pkl(out, exp_num, interpolate_params=False, assigned_anchor=None):
         if voxel:
             voxel_grid = o3d.geometry.VoxelGrid.create_from_point_cloud(pcd,
                                                             voxel_size=0.5)
-        text_pcd = text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
+        # text_pcd = text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
         vis.add_geometry(voxel_grid if voxel else pcd)
-        if add_text:
-            vis.add_geometry(text_pcd)
+        # if add_text:
+        #     vis.add_geometry(text_pcd)
         view_contrl = _vis.get_view_control()
         view_contrl.convert_from_pinhole_camera_parameters(view_params)
         ren = _vis.get_render_option()

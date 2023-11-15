@@ -21,7 +21,6 @@ def text_3d(text, pos, direction=None, degree=0.0, font='/System/Library/Fonts/T
 
 
     text = str(text)
-    font_obj = ImageFont.truetype(font, font_size)
     font_dim = font_obj.getsize(text)
 
     img = Image.new('RGB', font_dim, color=(255, 255, 255))
