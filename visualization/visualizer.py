@@ -2,9 +2,10 @@ from functools import partial
 import open3d as o3d
 from argparse import ArgumentParser
 from visualizer_pkl import visualize_pkl
-from utils.general import *
+from utils import *
 import os
 import pickle
+import numpy as np
 from einops import rearrange
 
 def normalize_point_clouds(pc):

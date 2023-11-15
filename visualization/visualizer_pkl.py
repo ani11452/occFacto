@@ -1,7 +1,7 @@
 from functools import partial 
 import open3d as o3d
 import numpy as np 
-from utils.general import *
+from utils import *
 import os
 from colour import Color
 from gif_maker import make_gif
