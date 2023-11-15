@@ -1,7 +1,7 @@
 from functools import partial 
 import open3d as o3d
 import numpy as np 
-import utils
+from utils.general import *
 import os
 from colour import Color
 from gif_maker import make_gif
@@ -38,14 +38,14 @@ def visualize_pkl(out, exp_num, interpolate_params=False, assigned_anchor=None):
     pc = out[T_list[T_id]][id]
     pcd.points = o3d.utility.Vector3dVector(pc)
     
-    pcd.colors = o3d.utility.Vector3dVector(utils.normalize(pc))
-    text_pcd = utils.text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
+    pcd.colors = o3d.utility.Vector3dVector(normalize(pc))
+    text_pcd = text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
     vis = o3d.visualization.VisualizerWithKeyCallback()
     vis.create_window(visible=True) #works for me with False, on some systems needs to be true
     vis.add_geometry(pcd)
     vis.add_geometry(text_pcd)
     view_contrl = vis.get_view_control()
-    view_contrl.rotate(utils.view_dict['top'])
+    view_contrl.rotate(*view_dict['top'])
     view_params = view_contrl.convert_to_pinhole_camera_parameters()
     ren = vis.get_render_option()
     if T_list[T_id] == 'anchors':
@@ -142,12 +142,12 @@ def visualize_pkl(out, exp_num, interpolate_params=False, assigned_anchor=None):
                 else:
                     pcd.colors = o3d.utility.Vector3dVector(pred_colors)
         else:
-            pcd.colors = o3d.utility.Vector3dVector(utils.normalize(pc))
+            pcd.colors = o3d.utility.Vector3dVector(normalize(pc))
 
         if voxel:
             voxel_grid = o3d.geometry.VoxelGrid.create_from_point_cloud(pcd,
                                                             voxel_size=0.5)
-        text_pcd = utils.text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
+        text_pcd = text_3d(T_list[T_id], [0, 1, 0], direction=[0, 0, 1], degree=270, font_size=30)
         vis.add_geometry(voxel_grid if voxel else pcd)
         if add_text:
             vis.add_geometry(text_pcd)
@@ -201,7 +201,7 @@ def visualize_pkl(out, exp_num, interpolate_params=False, assigned_anchor=None):
         for j in range(n):
             for i in range(10):
                 path = os.path.join(save_dir, f'T{i}.png')
-                utils.capture_screen_shot(_vis, path)
+                capture_screen_shot(_vis, path)
                 incrementT(_vis)
             for i in range(10):
                 decrementT(_vis)
@@ -210,7 +210,7 @@ def visualize_pkl(out, exp_num, interpolate_params=False, assigned_anchor=None):
             incrementid(_vis)
             
    
-    vis.register_key_callback(ord("S"), partial(utils.capture_screen_shot))
+    vis.register_key_callback(ord("S"), partial(capture_screen_shot))
     vis.register_key_callback(ord("D"), partial(incrementT))
     vis.register_key_callback(ord("A"), partial(decrementT))
     vis.register_key_callback(ord("E"), partial(incrementid))
