@@ -2,7 +2,7 @@ from functools import partial
 import open3d as o3d
 from argparse import ArgumentParser
 from visualizer_pkl import visualize_pkl
-from utils import *
+import utils
 import os
 import pickle
 import numpy as np
@@ -21,12 +21,12 @@ def visualize_npy(out):
     print(n)
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(out[id])
-    pcd.colors = o3d.utility.Vector3dVector(normalize(out[id]))
+    pcd.colors = o3d.utility.Vector3dVector(utils.normalize(out[id]))
     vis = o3d.visualization.VisualizerWithKeyCallback()
     vis.create_window(visible=True) #works for me with False, on some systems needs to be true
     vis.add_geometry(pcd)
     view_contrl = vis.get_view_control()
-    view_contrl.rotate(*view_dict['top'])
+    view_contrl.rotate(utils.view_dict['top'])
     view_params = view_contrl.convert_to_pinhole_camera_parameters()
     ren = vis.get_render_option()
     ren.background_color=np.array([1.,1.,1.])
@@ -58,9 +58,9 @@ def visualize_npy(out):
         pcd = o3d.geometry.PointCloud()
         pcd.points = o3d.utility.Vector3dVector(out[id])
         if color_id == -1:
-            pcd.colors = o3d.utility.Vector3dVector(normalize(out[id]))
+            pcd.colors = o3d.utility.Vector3dVector(utils.normalize(out[id]))
         else:
-            pcd.colors = o3d.utility.Vector3dVector(normalize(out[color_id]))
+            pcd.colors = o3d.utility.Vector3dVector(utils.normalize(out[color_id]))
         vis.add_geometry(pcd)
         view_contrl = _vis.get_view_control()
         view_contrl.convert_from_pinhole_camera_parameters(view_params)
@@ -84,7 +84,7 @@ def visualize_npy(out):
    
     
    
-    vis.register_key_callback(ord("S"), partial(capture_screen_shot))
+    vis.register_key_callback(ord("S"), partial(utils.capture_screen_shot))
     vis.register_key_callback(ord("E"), partial(incrementid))
     vis.register_key_callback(ord("Q"), partial(decrementid))
     vis.register_key_callback(ord("C"), partial(fixColor))
