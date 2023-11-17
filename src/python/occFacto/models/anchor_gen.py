@@ -32,7 +32,7 @@ class AnchorDiffAE(Module):
     def __init__(
         self, 
         encoder, 
-        diffusion, 
+        # diffusion, 
         sampler, 
         num_anchors,
         num_timesteps, 
@@ -81,10 +81,10 @@ class AnchorDiffAE(Module):
         super().__init__()
         self.pretrain_prior=pretrain_prior
         self.encoder = build_from_cfg(encoder, ENCODERS)
-        if pretrain_prior:
-            self.diffusion = nn.ModuleList([build_from_cfg(diffusion, DIFFUSIONS, num_timesteps=num_timesteps) for _ in range(num_anchors)])
-        else:
-            self.diffusion = build_from_cfg(diffusion, DIFFUSIONS, num_timesteps=num_timesteps)
+        # if pretrain_prior:
+        #     self.diffusion = nn.ModuleList([build_from_cfg(diffusion, DIFFUSIONS, num_timesteps=num_timesteps) for _ in range(num_anchors)])
+        # else:
+        #     self.diffusion = build_from_cfg(diffusion, DIFFUSIONS, num_timesteps=num_timesteps)
         self.sampler = build_from_cfg(sampler, SAMPLERS, num_timesteps=num_timesteps)
         self.diffusion_loss_weight=diffusion_loss_weight
         self.sample_noise_num=sample_noise_num
@@ -993,6 +993,10 @@ class AnchorDiffAE(Module):
         B, N, C = ref.shape
 
         ctx, mean_per_point, logvar_per_point, flag_per_point, fit_los_dict, part_code = self.encoder(pcds, device, epoch=epoch)
+
+        # Added by Aniketh
+        out_part_code = part_code
+
         if self.zero_anchors:
             mean_per_point = torch.zeros_like(mean_per_point)
         if self.npoints < N:
@@ -1080,8 +1084,13 @@ class AnchorDiffAE(Module):
                     pred['shift'] = pcds['shift']
                     pred['scale'] = pcds['scale']
                     pred = {k:v.detach().cpu() for k, v in pred.items()}
-                    out_list.append((pred,  f"gen_fixed" + "".join(map(lambda i: str(i), fixed_id))))
-                return out_list
+                    # out_list.append((pred,  f"gen_fixed" + "".join(map(lambda i: str(i), fixed_id))))
+                # return out_list
+
+                # ***** THIS IS OUR LATENTS, SHIFTS, AND SCALES *****
+                return [out_part_code[0], out_part_code[1], out_part_code[2]]
+            
+
             elif self.cimle:
                 noise, _ = self.encoder.sample_noise(pcds, device, self.cimle_sample_num)
                 ctx, mean_per_point, logvar_per_point, _, _, latents = self.encoder(pcds, device, noise=noise)
@@ -1127,7 +1136,11 @@ class AnchorDiffAE(Module):
             pred['scale'] = pcds['scale']
             pred = {k:v.detach().cpu()  if isinstance(v, torch.Tensor) else v for k, v in pred.items()}
             
-            out_list = [(pred, "sample")]
+            # out_list = [(pred, "sample")]
+
+            # TODO: OccFacto ADDITION
+            out_list = [out_part_code[0], pcds['shift'], pcds['scale']]
+            
             # out_list.append((self.interpolate_latent(device, pcds), "interpolate"))
             # out_list.append((self.combine_latent(pcds, device), "mixing"))
             # out_list.append((self.interpolate_params(device, pcds), "interpolate_params"))

@@ -1250,8 +1250,10 @@ class PartEncoder(nn.Module):
             mean = gt_shift
             logvar = torch.log(gt_var)
         ctx = self.prepare_ctx( part_code, mean, logvar, anchor_assignments=seg_mask, z=None)
-        
-        return ctx, mean_per_point, logvar_per_point + self.log_scale_var, flag_per_point, loss_dict, [part_code, mean, logvar, noise]
+
+        # TODO: ****** OccFacto Addition ******
+        return ctx
+        # return ctx, mean_per_point, logvar_per_point + self.log_scale_var, flag_per_point, loss_dict, [part_code, mean, logvar, noise]
 
 
 
