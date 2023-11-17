@@ -1,8 +1,8 @@
 import argparse
-from runner.runner import Runner 
-from config.config import init_cfg
-from utils.misc import str_list
-from utils import dist_utils
+from occFacto.runner.runner import Runner 
+from occFacto.config.config import init_cfg
+from occFacto.utils.misc import str_list
+from occFacto.utils import dist_utils
 import torch
 
 def main():

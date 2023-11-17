@@ -1,13 +1,13 @@
 import torch 
 from torch.nn import Module
-from utils.registry import DIFFUSIONS, NETS, build_from_cfg
-from utils.constants import ModelMeanType, ModelVarType, LossType
-from utils.misc import *
-from utils.constants import *
+from occFacto.utils.registry import DIFFUSIONS, NETS, build_from_cfg
+from occFacto.utils.constants import ModelMeanType, ModelVarType, LossType
+from occFacto.utils.misc import *
+from occFacto.utils.constants import *
 from torch.distributions.multivariate_normal import MultivariateNormal
 import math
 import numpy as np
-from utils.diffusion_utils import extract_into_tensor, betas_for_alpha_bar, from_numpy_to_device, get_cov_from_params, normal_kl
+from occFacto.utils.diffusion_utils import extract_into_tensor, betas_for_alpha_bar, from_numpy_to_device, get_cov_from_params, normal_kl
 
 @DIFFUSIONS.register_module()
 class AnchoredDiffusion(Module):

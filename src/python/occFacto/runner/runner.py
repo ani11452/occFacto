@@ -1,18 +1,18 @@
 import torch 
 from torch import nn
 import numpy as np
-from utils.misc import fps
-from datasets.evaluation_utils import compute_all_metrics
+from occFacto.utils.misc import fps
+from occFacto.datasets.evaluation_utils import compute_all_metrics
 from tqdm import tqdm
-from config.config import get_cfg, save_cfg, save_args
-from utils.registry import build_from_cfg, MODELS, DATASETS, OPTIMS, SCHEDULERS, HOOKS
-from utils.misc import check_file, build_file, search_ckpt, check_interval, sync, parse_losses
+from occFacto.config.config import get_cfg, save_cfg, save_args
+from occFacto.utils.registry import build_from_cfg, MODELS, DATASETS, OPTIMS, SCHEDULERS, HOOKS
+from occFacto.utils.misc import check_file, build_file, search_ckpt, check_interval, sync, parse_losses
 import pickle
 import os
 import time
 import datetime
-from utils import misc
-from utils import dist_utils
+from occFacto.utils import misc
+from occFacto.utils import dist_utils
 from einops import rearrange
 
 class Runner:

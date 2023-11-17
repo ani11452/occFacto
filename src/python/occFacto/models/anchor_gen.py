@@ -3,11 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import Module, functional
 from .attention import MLP
-from utils.misc import *
-from utils.registry import build_from_cfg, MODELS, ENCODERS, DIFFUSIONS, SAMPLERS, METRICS, DECOMPOSERS, SEGMENTORS, GENERATORS, DISCRIMINATORS
-from utils.metrics.common import gradient_penalty, gen_loss, dis_loss, triplet_loss
+from occFacto.utils.misc import *
+from occFacto.utils.registry import build_from_cfg, MODELS, ENCODERS, DIFFUSIONS, SAMPLERS, METRICS, DECOMPOSERS, SEGMENTORS, GENERATORS, DISCRIMINATORS
+from occFacto.utils.metrics.common import gradient_penalty, gen_loss, dis_loss, triplet_loss
 from pointnet2_ops.pointnet2_utils import gather_operation
-from utils.language_util import tokenizing
+from occFacto.utils.language_util import tokenizing
 from einops import rearrange
 VOCAB_SIZE=2787
 

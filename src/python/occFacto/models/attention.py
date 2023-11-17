@@ -8,8 +8,8 @@ from torch import nn, einsum
 from einops import rearrange, repeat
 from typing import Optional, Any, Union, List, Tuple
 
-from utils.misc import checkpoint
-from utils.registry import NETS
+from occFacto.utils.misc import checkpoint
+from occFacto.utils.registry import NETS
 
 
 try:

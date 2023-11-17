@@ -1,5 +1,5 @@
 from torch.optim.lr_scheduler import LambdaLR, StepLR, CosineAnnealingLR, _LRScheduler
-from utils.registry import SCHEDULERS
+from occFacto.utils.registry import SCHEDULERS
 from bisect import bisect
 import warnings
 import math

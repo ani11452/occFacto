@@ -1,0 +1,5 @@
+__pycache__
+src/python/occFacto.egg-info/
+src/python/occFacto/utils/pointnet2_ops_lib/build/
+src/python/occFacto/utils/pointnet2_ops_lib/pointnet2_ops.egg-info/
+src/work_dirs/

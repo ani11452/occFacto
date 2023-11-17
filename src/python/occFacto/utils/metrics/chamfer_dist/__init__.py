@@ -8,7 +8,7 @@
 import torch
 
 import chamfer
-from utils.registry import METRICS
+from occFacto.utils.registry import METRICS
 
 
 class ChamferFunction(torch.autograd.Function):

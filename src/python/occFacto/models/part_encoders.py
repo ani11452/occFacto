@@ -4,11 +4,11 @@ import torch
 import math
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 from functools import partial
-from utils.registry import ENCODERS, DECOMPOSERS, build_from_cfg
+from occFacto.utils.registry import ENCODERS, DECOMPOSERS, build_from_cfg
 from .pointnet import PointNet, PointNetVAEBase
 from pointnet2_ops.pointnet2_utils import gather_operation
 from einops import rearrange, repeat
-from utils.misc import gaussian_log_likelihood, reparameterize_gaussian, gaussian_entropy, standard_normal_logprob
+from occFacto.utils.misc import gaussian_log_likelihood, reparameterize_gaussian, gaussian_entropy, standard_normal_logprob
 from .attention import FeedForward, BasicTransformerBlock, zero_module, MLP
 from .flow import build_latent_flow
 def init_linear(l, stddev):

@@ -1,8 +1,8 @@
 import os
 import torch
 import torch.nn.functional as F
-from utils.registry import DATASETS
-from utils.misc import fps
+from occFacto.utils.registry import DATASETS
+from occFacto.utils.misc import fps
 from torch.utils.data import Dataset
 import numpy as np
 from tqdm.auto import tqdm

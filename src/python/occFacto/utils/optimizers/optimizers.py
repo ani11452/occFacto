@@ -1,5 +1,5 @@
 import torch
-from utils.registry import OPTIMS
+from occFacto.utils.registry import OPTIMS
 
 @OPTIMS.register_module()
 class Adam(torch.optim.Adam):

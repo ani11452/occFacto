@@ -81,7 +81,7 @@ model = dict(
 dataset = dict(
     train=dict(
         type="ShapeNetSegPart",
-        batch_size = 128,
+        batch_size =32,
         split='trainval',
         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
         npoints=2048,
@@ -94,7 +94,7 @@ dataset = dict(
     ),
     val=dict(
         type="ShapeNetSegPart",
-        batch_size= 64,
+        batch_size= 32,
         split='test',
         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
         npoints=2048,

@@ -24,7 +24,7 @@ import torch
 from torch import nn
 from torch.autograd import Function
 import emd
-from utils.registry import METRICS
+from occFacto.utils.registry import METRICS
 
 
 

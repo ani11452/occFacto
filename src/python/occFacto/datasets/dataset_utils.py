@@ -1,8 +1,8 @@
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
-from utils.misc import separate_point_cloud
-from utils.registry import build_from_cfg, METRICS
+from occFacto.utils.misc import separate_point_cloud
+from occFacto.utils.registry import build_from_cfg, METRICS
 import random
 from plyfile import  PlyData
 

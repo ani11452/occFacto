@@ -1,7 +1,7 @@
 import torch 
 from torch import nn
 import torch.nn.functional as F
-from utils.registry import ENCODERS
+from occFacto.utils.registry import ENCODERS
 
 @ENCODERS.register_module()
 class PointNetVAEBase(nn.Module):

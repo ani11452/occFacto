@@ -3,7 +3,7 @@ from .registry import HOOKS, build_from_cfg
 import time 
 import os
 from tensorboardX import SummaryWriter
-from config.config import get_cfg
+from occFacto.config.config import get_cfg
 
 @HOOKS.register_module()
 class TextLogger:

@@ -1,6 +1,6 @@
 import torch
 import torch.nn.functional as F
-from utils.registry import METRICS
+from occFacto.utils.registry import METRICS
 import math 
 import random
 

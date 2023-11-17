@@ -8,11 +8,11 @@ from numpy.linalg import norm
 from tqdm.auto import tqdm
 # Import CUDA version of approximate EMD,
 # from https://github.com/zekunhao1995/pcgan-pytorch/
-from utils.metrics.chamfer_dist import ChamferDistanceL2_split
-from utils.metrics.emd.emd_module import EMD
-from utils.misc import fps
+from occFacto.utils.metrics.chamfer_dist import ChamferDistanceL2_split
+from occFacto.utils.metrics.emd.emd_module import EMD
+from occFacto.utils.misc import fps
 from functools import partial
-from utils.iou import get_3d_box, box3d_iou
+from occFacto.utils.iou import get_3d_box, box3d_iou
 
 def distChamferCUDA(x, y):
     func = ChamferDistanceL2_split(reduce=False)
