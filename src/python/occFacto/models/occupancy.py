@@ -8,7 +8,7 @@ import math
 from .occ_types import *
 from .occ_models import *
 # from utils import files_utils
-from occFacto.utils.registry import build_from_cfg, MODELS, ENCODERS, DIFFUSIONS, SAMPLERS, METRICS, DECOMPOSERS, SEGMENTORS, GENERATORS, DISCRIMINATORS
+from occFacto.utils.registry import OCCUPANCIES
 
 
 
@@ -69,7 +69,7 @@ class DecompositionNetwork(nn.Module):
                                                        norm_layer=norm_layer)
 
 
-@DIFFUSIONS.register_module()
+@OCCUPANCIES.register_module()
 class OccupancyMlP(nn.Module):
     ## base on DeepSDF https://github.com/facebookresearch/DeepSDF
     def forward(self, x, z):
@@ -97,7 +97,7 @@ class OccupancyMlP(nn.Module):
         self.layers = nn.ModuleList(layers)
 
 
-@DIFFUSIONS.register_module()
+@OCCUPANCIES.register_module()
 class OccupancyNetwork(nn.Module):
 
     def get_pos(self, coords: T):
@@ -130,7 +130,7 @@ class OccupancyNetwork(nn.Module):
                                                        opt.num_heads_head, opt.num_layers_head,
                                                        dim_ref=opt.dim_h)
 
-@DIFFUSIONS.register_module()
+@OCCUPANCIES.register_module()
 class DecompositionControl(Model):
 
     def forward_bottom(self, x):

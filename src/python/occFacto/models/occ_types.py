@@ -109,10 +109,10 @@ class Options_Occ:
         self.dataset_name = 'shapenet_airplanes_wm_sphere_sym_train'
         self.epochs = 2000
         self.model_name = 'spaghetti'
-        self.dim_z = 256
-        self.pos_dim = 256 - 3
-        self.dim_h = 512
-        self.dim_zh = 512
+        self.dim_z = 128
+        self.pos_dim = 128 - 3
+        self.dim_h = 128
+        self.dim_zh = 128
         self.num_gaussians = 16
         self.min_split = 4
         self.max_split = 12
