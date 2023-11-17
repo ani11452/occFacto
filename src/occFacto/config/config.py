@@ -1,6 +1,6 @@
 # reference maskrcnn_benchmark default
 from collections import OrderedDict
-from difffacto.utils.misc import check_file
+from utils.misc import check_file
 import os
 import yaml
 import copy
