@@ -94,6 +94,39 @@ dataset = dict(
     ),
 )
 
+datasetNeg = dict(
+    train=dict(
+        type="ShapeNetSegPart",
+        batch_size = 13,
+        split='trainval',
+        root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
+        npoints=2048,
+        scale_mode='shape_unit',
+        part_scale_mode='shape_canonical',
+        eval_mode='gen',
+        drop_last=False,
+        clip=False,
+        num_workers=2,
+        class_choice='Lamp',
+    ),
+    val=dict(
+        type="ShapeNetSegPart",
+        batch_size= 13,
+        split='test',
+        root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
+        npoints=2048,
+        shuffle=False,
+        scale_mode='shape_unit',
+        part_scale_mode='shape_canonical',
+        eval_mode='gen_part',
+        drop_last=False,
+        clip=False,
+        num_workers=0,
+        class_choice='Lamp',
+        save_only=True
+    ),
+)
+
 optimizer = dict(type='Adam', lr=0.002, weight_decay=0.)
 
 scheduler = dict(
