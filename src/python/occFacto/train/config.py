@@ -1,17 +1,17 @@
 import yaml
 from torchvision import transforms
-from im2mesh import data
-from im2mesh import onet, r2n2, psgn, pix2mesh, dmc
-from im2mesh import preprocess
+from occFacto.train import data
+# from train import onet, r2n2, psgn, pix2mesh, dmc
+# from train import preprocess
 
 
-method_dict = {
-    'onet': onet,
-    'r2n2': r2n2,
-    'psgn': psgn,
-    'pix2mesh': pix2mesh,
-    'dmc': dmc,
-}
+# method_dict = {
+#     'onet': onet,
+#     'r2n2': r2n2,
+#     'psgn': psgn,
+#     'pix2mesh': pix2mesh,
+#     'dmc': dmc,
+# }
 
 
 # General config
@@ -242,15 +242,16 @@ def get_preprocessor(cfg, dataset=None, device=None):
     cfg_path = cfg['preprocessor']['config']
     model_file = cfg['preprocessor']['model_file']
 
-    if p_type == 'psgn':
-        preprocessor = preprocess.PSGNPreprocessor(
-            cfg_path=cfg_path,
-            pointcloud_n=cfg['data']['pointcloud_n'],
-            dataset=dataset,
-            device=device,
-            model_file=model_file,
-        )
-    elif p_type is None:
+    # TODO: do we need psgn?
+    # if p_type == 'psgn':
+    #     preprocessor = preprocess.PSGNPreprocessor(
+    #         cfg_path=cfg_path,
+    #         pointcloud_n=cfg['data']['pointcloud_n'],
+    #         dataset=dataset,
+    #         device=device,
+    #         model_file=model_file,
+    #     )
+    if p_type is None:
         preprocessor = None
     else:
         raise ValueError('Invalid Preprocessor %s' % p_type)
