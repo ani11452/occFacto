@@ -89,6 +89,7 @@ def train_loop(train_dataset, train_datasetNeg, optimizer, log):
 
         for pcds in tqdm(zip(train_dataset, train_datasetNeg)):
             pcds, opp = pcds
+            print(pcds, opp)
             out = diffFacto(pcds, device="cuda")
             out = torch.cat(tuple(out), dim=1)
             

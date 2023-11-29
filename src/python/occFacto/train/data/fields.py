@@ -4,8 +4,8 @@ import random
 from PIL import Image
 import numpy as np
 import trimesh
-from train.data.core import Field
-from train.utils import binvox_rw
+from occFacto.train.data.core import Field
+from occFacto.utils import binvox_rw
 
 
 class IndexField(Field):

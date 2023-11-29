@@ -1,12 +1,12 @@
 
-from train.data.core import (
+from occFacto.train.data.core import (
     Shapes3dDataset, collate_remove_none, worker_init_fn
 )
-from train.data.fields import (
+from occFacto.train.data.fields import (
     IndexField, CategoryField, ImagesField, PointsField,
     VoxelsField, PointCloudField, MeshField,
 )
-from train.data.transforms import (
+from occFacto.train.data.transforms import (
     PointcloudNoise, SubsamplePointcloud,
     SubsamplePoints
 )
