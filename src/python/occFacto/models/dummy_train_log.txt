@@ -1,0 +1,1 @@
+Epoch [21/20], Training Loss: 0.671424925327301, Accuracy: 0.5730249285697937%Epoch [21/20], Training Loss: 0.640950620174408, Accuracy: 0.6240969300270081%
