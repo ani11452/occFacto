@@ -1,0 +1,3 @@
+# ninja log v5
+0	29474	1701328148711519249	/home/cs236finalproject/diffFactoCS236/src/python/occFacto/utils/metrics/chamfer_dist/build/temp.linux-x86_64-cpython-38/chamfer_cuda.o	2d20f1a635347b0f
+0	65507	1701328184745677944	/home/cs236finalproject/diffFactoCS236/src/python/occFacto/utils/metrics/chamfer_dist/build/temp.linux-x86_64-cpython-38/chamfer.o	f82c28c593f6b354

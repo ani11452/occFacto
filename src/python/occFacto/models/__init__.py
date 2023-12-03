@@ -7,3 +7,4 @@ from .pointnet import PointNet, PointNetV2, PointNetV3, PointNetV2VAE, PointNetV
 from .occupancy import OccupancyNetwork
 from .occ_models import Transformer
 from .occ_types import Options_Occ
+# from .occFactoModel import OccFacto

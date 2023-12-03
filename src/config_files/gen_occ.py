@@ -61,6 +61,7 @@ model = dict(
     save_weights=False,
 )
 
+'''
 dataset = dict(
     train=dict(
         type="ShapeNetSegPart",
@@ -93,12 +94,13 @@ dataset = dict(
         save_only=True
     ),
 )
+'''
 
-datasetNeg = dict(
+dataset = dict(
     train=dict(
         type="ShapeNetSegPart",
-        batch_size = 13,
-        split='trainval',
+        batch_size = 32,
+        split='train',
         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
         npoints=2048,
         scale_mode='shape_unit',
@@ -107,11 +109,27 @@ datasetNeg = dict(
         drop_last=False,
         clip=False,
         num_workers=2,
-        class_choice='Lamp',
+        class_choice='Chair',
     ),
     val=dict(
         type="ShapeNetSegPart",
-        batch_size= 13,
+        batch_size= 32,
+        split='val',
+        root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
+        npoints=2048,
+        shuffle=False,
+        scale_mode='shape_unit',
+        part_scale_mode='shape_canonical',
+        eval_mode='gen_part',
+        drop_last=False,
+        clip=False,
+        num_workers=0,
+        class_choice='Chair',
+        save_only=True
+    ),
+    test=dict(
+        type="ShapeNetSegPart",
+        batch_size= 32,
         split='test',
         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
         npoints=2048,
@@ -122,7 +140,7 @@ datasetNeg = dict(
         drop_last=False,
         clip=False,
         num_workers=0,
-        class_choice='Lamp',
+        class_choice='Chair',
         save_only=True
     ),
 )
