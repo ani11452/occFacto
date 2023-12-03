@@ -17,3 +17,5 @@ src/python/occFacto/models/occFactoDiffFreezeTraining1
 src/python/occFacto/models/occFactoDiffFreezeTraining2
 */build/
 *.pkl
+
+testnpz/03001627.zip
