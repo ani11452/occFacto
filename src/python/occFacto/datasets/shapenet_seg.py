@@ -14,7 +14,7 @@ from pointnet2_ops import pointnet2_utils
 
 # From Occupancy Network
 from occFacto.train.data.fields import PointsField
-from occFacto.train.data.transforms import SubsamplePoints
+from occFacto.train.data.transforms import SubsamplePointsHalf
 
 
 @DATASETS.register_module()
@@ -558,7 +558,7 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         # Get Mesh Train Data Samples for Occupancy
         # Load file paths
         mesh_paths = "../../../../data/ShapeNet/03001627"
-        transform = SubsamplePoints(2048)
+        transform = SubsamplePointsHalf(2048)
         ptsfield = PointsField("points.npz", transform)
         path = os.path.join(mesh_paths, token)
         data = ptsfield.load(path)

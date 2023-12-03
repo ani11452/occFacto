@@ -55,8 +55,9 @@ test_dataset, test_sampler = build_from_cfg(cfg.dataset.test, DATASETS, distribu
 
 # Loss and Training Parameters: Based on Spaghetti Paper 
 # Loss Function
-p_w = torch.tensor(15.1908)
-loss_f = nn.BCEWithLogitsLoss(pos_weight = p_w)
+# p_w = torch.tensor(15.1908)
+# loss_f = nn.BCEWithLogitsLoss(pos_weight = p_w)
+loss_f = nn.BCEWithLogitsLoss()
 
 # Adam optimizer settings
 learning_rate = 2e-3
