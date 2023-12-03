@@ -12,6 +12,10 @@ import json
 import random
 from pointnet2_ops import pointnet2_utils
 
+# From Occupancy Network
+from occFacto.train.data.fields import PointsField
+from occFacto.train.data.transforms import SubsamplePoints
+
 
 @DATASETS.register_module()
 def ShapeNetSegPart(
@@ -517,12 +521,60 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         assert (shifts.shape == shifts.shape == (self.num_class, 3))
         assert ori_out.shape == (self.npoints, 3) == out.shape
         assert seg_onehot.shape == (self.npoints, self.num_class)
+
+        '''
+        # Get Mesh Train Data Samples for Occupancy
+        # Load file paths
+        mesh_paths = "../../../../data/ShapeNet/03001627"
+        path = os.path.join(mesh_paths, token)
+        path = os.path.join(path, "points.npz")
         
+        # Load the data
+        data = np.load(path)
+
+        # Get the points and respective occupancies
+        points = data['points']
+        occupancies = data['occupancies']
+
+        # Convert Occupancies to Binary Vector
+        if occupancies.dtype != np.uint8:
+            occupancies = occupancies.astype(np.uint8)
+        occupancies = np.unpackbits(occupancies)
+
+        # If we want to subsample points for occupancy training
+        sub_samp = 2048
+        random_indices = np.random.permutation(sub_samp)
+        points = points[random_indices, :]
+        occupancies = occupancies[random_indices]
+
+        # Convert to Torch
+        points = torch.FloatTensor(points)
+        occupancies = torch.FloatTensor(occupancies)
+
+        # Return Payload
+        occs = (points, occupancies)
+        '''
+
+        # Get Mesh Train Data Samples for Occupancy
+        # Load file paths
+        mesh_paths = "../../../../data/ShapeNet/03001627"
+        transform = SubsamplePoints(2048)
+        ptsfield = PointsField("points.npz", transform)
+        path = os.path.join(mesh_paths, token)
+        data = ptsfield.load(path)
+
+        # Get the points and respective occupancies
+        points = data[None]
+        occupancies = data['occ']
+
+        # Convert to Torch
+        points = torch.FloatTensor(points)
+        occupancies = torch.FloatTensor(occupancies)
+
+        # Return Payload
+        occs = (points, occupancies)
         
-
-
-
-
+        # Return the parameters needed for training
         return {
             'present': present,
             'dp_present': drop_outed_present,
@@ -540,4 +592,5 @@ class _ShapeNetSegParts(_ShapeNetSeg):
             'scale':scale, 
             'id':index,
             'noise':torch.from_numpy(noise),
+            'occs': occs
             } # pointset is point cloud data, cls has 16 categories, and seg is a small category corresponding to different points in the data

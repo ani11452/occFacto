@@ -7,6 +7,8 @@ import trimesh
 from occFacto.train.data.core import Field
 from occFacto.utils import binvox_rw
 
+from occFacto.train.data.transforms import SubsamplePoints
+
 
 class IndexField(Field):
     ''' Basic index field.'''
@@ -132,13 +134,13 @@ class PointsField(Field):
             provided
 
     '''
-    def __init__(self, file_name, transform=None, with_transforms=False, unpackbits=False):
+    def __init__(self, file_name, transform=None, with_transforms=True, unpackbits=True):
         self.file_name = file_name
         self.transform = transform
         self.with_transforms = with_transforms
         self.unpackbits = unpackbits
 
-    def load(self, model_path, idx, category):
+    def load(self, model_path):
         ''' Loads the data point.
 
         Args:

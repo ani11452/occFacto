@@ -1,0 +1,3 @@
+# ninja log v5
+1	26756	1701328214407454905	/home/cs236finalproject/diffFactoCS236/src/python/occFacto/utils/metrics/emd/build/temp.linux-x86_64-cpython-38/emd.o	e19145c2e6eead67
+1	27364	1701328215027492050	/home/cs236finalproject/diffFactoCS236/src/python/occFacto/utils/metrics/emd/build/temp.linux-x86_64-cpython-38/emd_cuda.o	c6ec49bfb5d4e98b

@@ -64,7 +64,7 @@ for exam in val_dataset:
 
     data = {
             "val_example": exam,
-            "predictions": occPreds}
+            "predictions": occPreds.cpu()}
 
     file_path = "best_model_pred_" + str(i) + ".pkl"
     
