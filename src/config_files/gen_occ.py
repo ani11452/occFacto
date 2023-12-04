@@ -61,11 +61,11 @@ model = dict(
     save_weights=False,
 )
 
-'''
+
 dataset = dict(
     train=dict(
         type="ShapeNetSegPart",
-        batch_size = 32,
+        batch_size = 16,
         split='trainval',
         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
         npoints=2048,
@@ -79,7 +79,7 @@ dataset = dict(
     ),
     val=dict(
         type="ShapeNetSegPart",
-        batch_size= 32,
+        batch_size= 16,
         split='test',
         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
         npoints=2048,
@@ -87,63 +87,63 @@ dataset = dict(
         scale_mode='shape_unit',
         part_scale_mode='shape_canonical',
         eval_mode='gen_part',
-        drop_last=False,
-        clip=False,
-        num_workers=0,
-        class_choice='Chair',
-        save_only=True
-    ),
-)
-'''
-
-dataset = dict(
-    train=dict(
-        type="ShapeNetSegPart",
-        batch_size = 32,
-        split='train',
-        root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
-        npoints=2048,
-        scale_mode='shape_unit',
-        part_scale_mode='shape_canonical',
-        eval_mode='gen',
         drop_last=False,
         clip=False,
         num_workers=2,
         class_choice='Chair',
-    ),
-    val=dict(
-        type="ShapeNetSegPart",
-        batch_size= 32,
-        split='val',
-        root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
-        npoints=2048,
-        shuffle=False,
-        scale_mode='shape_unit',
-        part_scale_mode='shape_canonical',
-        eval_mode='gen_part',
-        drop_last=False,
-        clip=False,
-        num_workers=0,
-        class_choice='Chair',
-        save_only=True
-    ),
-    test=dict(
-        type="ShapeNetSegPart",
-        batch_size= 32,
-        split='test',
-        root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
-        npoints=2048,
-        shuffle=False,
-        scale_mode='shape_unit',
-        part_scale_mode='shape_canonical',
-        eval_mode='gen_part',
-        drop_last=False,
-        clip=False,
-        num_workers=0,
-        class_choice='Chair',
         save_only=True
     ),
 )
+
+
+# dataset = dict(
+#     train=dict(
+#         type="ShapeNetSegPart",
+#         batch_size = 128,
+#         split='train',
+#         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
+#         npoints=2048,
+#         scale_mode='shape_unit',
+#         part_scale_mode='shape_canonical',
+#         eval_mode='gen',
+#         drop_last=False,
+#         clip=False,
+#         num_workers=2,
+#         class_choice='Chair',
+#     ),
+#     val=dict(
+#         type="ShapeNetSegPart",
+#         batch_size= 128,
+#         split='val',
+#         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
+#         npoints=2048,
+#         shuffle=False,
+#         scale_mode='shape_unit',
+#         part_scale_mode='shape_canonical',
+#         eval_mode='gen_part',
+#         drop_last=False,
+#         clip=False,
+#         num_workers=2,
+#         class_choice='Chair',
+#         save_only=True
+#     ),
+#     test=dict(
+#         type="ShapeNetSegPart",
+#         batch_size= 128,
+#         split='test',
+#         root='/home/cs236finalproject/diffFactoCS236/diffFacto/diffFacto_data',
+#         npoints=2048,
+#         shuffle=False,
+#         scale_mode='shape_unit',
+#         part_scale_mode='shape_canonical',
+#         eval_mode='gen_part',
+#         drop_last=False,
+#         clip=False,
+#         num_workers=2,
+#         class_choice='Chair',
+#         save_only=True
+#     ),
+#)
 
 optimizer = dict(type='Adam', lr=0.002, weight_decay=0.)
 

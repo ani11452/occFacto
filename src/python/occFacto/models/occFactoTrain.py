@@ -78,7 +78,7 @@ decay_interval = 100
 scheduler = lr_scheduler.ExponentialLR(optimizer, gamma=decay_factor)
 
 # Logger File
-log_file = "occFactoDiffFreezeTraining2/training_stats.txt"
+log_file = "occFactoDiffFreezeTraining3/training_stats.txt"
 
 # Define the Train Loop
 def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, epochs):
@@ -155,19 +155,19 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
             }
 
             # Get Validations Results / Metrics
-            validation_metrics = trainer.validation(validation_dataset, model, diffFacto, loss_f)
+            validation_metrics = trainer.validation(validation_dataset, model, diffFacto, loss_f, epoch)
 
             # Save Checkpoint
             # trainer.backup()
             if (epoch + 1) % 100 == 0:
-                torch.save(model.state_dict(), f"occFactoDiffFreezeTraining2/occFacto_epoch_{epoch}.pth")
+                torch.save(model.state_dict(), f"occFactoDiffFreezeTraining3/occFacto_epoch_{epoch}.pth")
 
             # Save visualization
             # trainer.save_visualization()
 
             # Update Best Model
             if validation_metrics["Avg_Loss"] < best_loss:
-                torch.save(model.state_dict(), f"occFactoDiffFreezeTraining2/occFacto_best_model.pth")
+                torch.save(model.state_dict(), f"occFactoDiffFreezeTraining3/occFacto_best_model.pth")
                 print(f"Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Accuracy: {train_metrics['Avg_Accuracy']}, Best")
                 log.write(f"Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Accuracy: {train_metrics['Avg_Accuracy']}, Best \n")
                 print(f"Epoch: {epoch + 1}, Loss: {validation_metrics['Avg_Loss']}, Accuracy: {validation_metrics['Avg_Accuracy']}, Best")
@@ -184,7 +184,7 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
 
         # Save params after training
         # trainer.save_checkpoint(final=True)
-        torch.save(model.state_dict(), f"occFactoDiffFreezeTraining2/occFacto_final{epoch}.pth")
+        torch.save(model.state_dict(), f"occFactoDiffFreezeTraining3/occFacto_final{epoch}.pth")
 
 # Train the Model
 train_loop(train_dataset, log_file, occFacto, optimizer, scheduler, trainer, epochs)

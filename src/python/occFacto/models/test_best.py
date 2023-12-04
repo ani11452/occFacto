@@ -24,6 +24,7 @@ from occFacto.models.occFactoModel import OccFacto
 from occFacto.eval.trainerOcc import Trainer
 
 import pickle
+import mcubes
 
 # Get diffFacto encoder to generate latents
 init_cfg('/home/cs236finalproject/diffFactoCS236/src/config_files/gen_occ.py')
@@ -32,23 +33,17 @@ diffFacto = build_from_cfg(cfg.model,MODELS)
 diffFacto = diffFacto.encoder.to("cuda")
 
 # Initialize the the Trainer class
+trainer = Trainer()
 
-'''
-train_params = {
-    "print_every": 1,
-    "visualize_every": 1, 
-    "checkpoint_every": 1,
-    "backup_every": 1,
-    "validate_every": 1}
-'''
-# trainer = Trainer()
-
-# Intialize the Model we want to Train
+# Intialize the Model we want to Eval
 model = OccFacto()
-checkpoint = torch.load("occFactoDiffFreezeTraining/occFacto_best_model_epoch_149.pth")
+checkpoint = torch.load("occFactoDiffFreezeTraining2/occFacto_best_model.pth")
 model.load_state_dict(checkpoint)
 model.to("cuda")
 val_dataset, val_sampler = build_from_cfg(cfg.dataset.val, DATASETS, distributed=False)
+
+# Generate eval cube:
+# eval_p = 1.1 * trainer.make_3d_grid((-0.5,)*3, (0.5,)*3, (25,)*3)
 
 i = 5
 for exam in val_dataset:
@@ -57,23 +52,36 @@ for exam in val_dataset:
     latents = diffFacto(exam, device="cuda")
     latents = torch.cat(tuple(latents), dim=1)
 
-    # Model outputs
-    occPoints = exam["occs"][0].to("cuda")
-    occPreds = model(latents, occPoints)
+    print(latents.shape)
 
+    print(trainer.eval_metrics(model, latents, exam))
 
-    data = {
-            "val_example": exam,
-            "predictions": occPreds.cpu()}
+    # Model Eval
+    # occ_hats = trainer.eval_points(model, latents)
 
-    file_path = "best_model_pred_" + str(i) + ".pkl"
+    # # Reshape
+    # occ_hats = occ_hats.view(25, 25, 25)
+    # occ_hats = np.pad(occ_hats, 1, 'constant', constant_values=-1e6)
+    # occ_hats = mcubes.smooth(occ_hats)
+
+    # # Apply marching cubes algorithm
+    # vertices, triangles = mcubes.marching_cubes(occ_hats, 0)
+    # mcubes.export_mesh(vertices, triangles, "occFactoDiffFreezeTraining2/best_model_pred_" + str(i) + ".dae")
+
     
-    # Save the dictionary to a binary file using pickle
-    with open(file_path, 'wb') as pickle_file:
-        pickle.dump(data, pickle_file)
+    # data = {
+    #     "val_example": exam,
+    #     "predictions": occ_hats.cpu()
+    # }
+
+    # file_path = "occFactoDiffFreezeTraining2/best_model_pred_" + str(i) + ".pkl"
+    
+    # # Save the dictionary to a binary file using pickle
+    # with open(file_path, 'wb') as pickle_file:
+    #     pickle.dump(data, pickle_file)
+    
     
     i -= 1
-
 
 
 

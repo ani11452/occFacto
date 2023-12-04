@@ -238,7 +238,7 @@ class PointCloudField(Field):
         self.transform = transform
         self.with_transforms = with_transforms
 
-    def load(self, model_path, idx, category):
+    def load(self, model_path):
         ''' Loads the data point.
 
         Args:

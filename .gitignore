@@ -15,7 +15,10 @@ data
 .file_checker.py.swp
 src/python/occFacto/models/occFactoDiffFreezeTraining1
 src/python/occFacto/models/occFactoDiffFreezeTraining2
+src/python/occFacto/models/occFactoDiffFreezeTraining3/
 */build/
 *.pkl
 
 testnpz/03001627.zip
+
+*.so

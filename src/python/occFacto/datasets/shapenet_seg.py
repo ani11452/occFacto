@@ -13,8 +13,8 @@ import random
 from pointnet2_ops import pointnet2_utils
 
 # From Occupancy Network
-from occFacto.train.data.fields import PointsField
-from occFacto.train.data.transforms import SubsamplePointsHalf
+from occFacto.train.data.fields import PointsField, PointCloudField
+from occFacto.train.data.transforms import SubsamplePointsHalf, SubsamplePointcloud
 
 
 @DATASETS.register_module()
@@ -558,18 +558,32 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         # Get Mesh Train Data Samples for Occupancy
         # Load file paths
         mesh_paths = "../../../../data/ShapeNet/03001627"
-        transform = SubsamplePointsHalf(2048)
+        # transform = SubsamplePointsHalf(2048)
+        # transform_pcd = SubsamplePointcloud(2048)
+        transform = SubsamplePointsHalf(1024)
+        transform_pcd = SubsamplePointcloud(1024)
         ptsfield = PointsField("points.npz", transform)
+        pcdsfield = PointCloudField("pointcloud.npz", transform_pcd)
         path = os.path.join(mesh_paths, token)
         data = ptsfield.load(path)
+        pcdsdata = pcdsfield.load(path)
 
         # Get the points and respective occupancies
-        points = data[None]
-        occupancies = data['occ']
+        points = torch.FloatTensor(data[None])
+        occupancies = torch.FloatTensor(data['occ'])
+
+        # Get the points and respective occupancies
+        pointcloud_chamfer = torch.FloatTensor(pcdsdata[None])
+        pointcloud_chamfernorms = torch.FloatTensor(pcdsdata['normals'])
+        pointcloud_occs = torch.ones_like(occupancies)
 
         # Convert to Torch
-        points = torch.FloatTensor(points)
-        occupancies = torch.FloatTensor(occupancies)
+        # points = torch.FloatTensor(points)
+        # occupancies = torch.FloatTensor(occupancies)
+
+        points = torch.cat((pointcloud_chamfer, points), dim=0)
+        occupancies = torch.cat((pointcloud_occs, occupancies), dim=0)
+
 
         # Return Payload
         occs = (points, occupancies)
@@ -592,5 +606,7 @@ class _ShapeNetSegParts(_ShapeNetSeg):
             'scale':scale, 
             'id':index,
             'noise':torch.from_numpy(noise),
-            'occs': occs
-            } # pointset is point cloud data, cls has 16 categories, and seg is a small category corresponding to different points in the data
+            'occs': occs,
+            'pointcloud_chamfer': pointcloud_chamfer,
+            'pointcloud_chamfernorms': pointcloud_chamfernorms,
+        } # pointset is point cloud data, cls has 16 categories, and seg is a small category corresponding to different points in the data

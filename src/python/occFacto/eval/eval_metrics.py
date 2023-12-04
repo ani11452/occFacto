@@ -4,8 +4,8 @@ import numpy as np
 import trimesh
 from plyfile import PlyData
 # from scipy.spatial import cKDTree
-from occFacto.eval.libkdtree import KDTree
-from occFacto.eval.libmesh import check_mesh_contains
+from pykdtree.kdtree import KDTree
+from libmesh.inside_mesh import check_mesh_contains
 from occFacto.eval.compute_iou import compute_iou
 
 
@@ -36,6 +36,7 @@ class MeshEvaluator(object):
         n_points (int): number of points to be used for evaluation
     '''
 
+    # Maybe change to 10000?
     def __init__(self, n_points=100000):
         self.n_points = n_points
 
@@ -50,6 +51,7 @@ class MeshEvaluator(object):
             points_iou (numpy_array): points tensor for IoU evaluation
             occ_tgt (numpy_array): GT occupancy values for IoU points
         '''
+
         if len(mesh.vertices) != 0 and len(mesh.faces) != 0:
             pointcloud, idx = mesh.sample(self.n_points, return_index=True)
             pointcloud = pointcloud.astype(np.float32)
@@ -143,6 +145,9 @@ def distance_p2p(points_src, normals_src, points_tgt, normals_tgt):
         points_tgt (numpy array): target points
         normals_tgt (numpy array): target normals
     '''
+    print(points_tgt.shape)
+    print(points_src.shape)
+
     kdtree = KDTree(points_tgt)
     dist, idx = kdtree.query(points_src)
 
