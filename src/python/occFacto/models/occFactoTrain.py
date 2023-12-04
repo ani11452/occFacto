@@ -38,7 +38,7 @@ train_params = {
     "backup_every": 1,
     "validate_every": 1}
 '''
-trainer = Trainer()
+trainer = Trainer(diffFacto)
 
 # Intialize the Model we want to Train
 occFacto = OccFacto().to("cuda")
@@ -168,8 +168,8 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
                 }, f"occFactoDiffFreezeTraining2/occFacto_epoch_{epoch}.pth")
 
             # Save visualization
-            
-            # Save a visualization of a random subset EVERY???
+            if (epoch + 1) % 100 == 0:
+                trainer.visualize()
 
             # Update Best Model
             if validation_metrics["Avg_Loss"] < best_loss:
