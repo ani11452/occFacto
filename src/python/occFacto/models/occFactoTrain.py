@@ -29,19 +29,22 @@ cfg = get_cfg()
 diffFacto = build_from_cfg(cfg.model,MODELS)
 diffFacto = diffFacto.encoder.to("cuda")
 
+# Create parameters for trainer class
+train_folder = "occFactoDiffFreezeTrainingLegitNoSurf"
+eval_mesh_every = 20
+bs_meshes = 2
+visualize_every = 50
+save_checkpoint = 50
+
+if not os.path.exists(train_folder):
+        os.makedirs(train_folder)
+
 # Initialize the the Trainer class
-'''
-train_params = {
-    "print_every": 1,
-    "visualize_every": 1, 
-    "checkpoint_every": 1,
-    "backup_every": 1,
-    "validate_every": 1}
-'''
-trainer = Trainer(diffFacto)
+trainer = Trainer(diffFacto, train_folder, eval_mesh_every, bs_meshes, visualize_every)
 
 # Intialize the Model we want to Train
-occFacto = OccFacto().to("cuda")
+occFacto = OccFacto()
+occFacto.to("cuda")
 
 # Get train data
 train_dataset, train_sampler = build_from_cfg(cfg.dataset.train, DATASETS, distributed=False)
@@ -49,13 +52,7 @@ train_dataset, train_sampler = build_from_cfg(cfg.dataset.train, DATASETS, distr
 # Get train data
 validation_dataset, validation_sampler = build_from_cfg(cfg.dataset.val, DATASETS, distributed=False)
 
-# Get test data
-# test_dataset, test_sampler = build_from_cfg(cfg.dataset.test, DATASETS, distributed=False)
-
-# Loss and Training Parameters: Based on Spaghetti Paper 
-# Loss Function
-# p_w = torch.tensor(15.1908)
-# loss_f = nn.BCEWithLogitsLoss(pos_weight = p_w)
+# Get Loss Function
 loss_f = nn.BCEWithLogitsLoss()
 
 # Epochs
@@ -77,17 +74,32 @@ warmup = lr_scheduler.LinearLR(optimizer, 1 / warm_up_iter, 1, warm_up_iter)
 
 # Decay
 decay_factor = 0.9
-decay_interval = 800
+decay_interval = 120
 decay = lr_scheduler.ExponentialLR(optimizer, gamma=decay_factor)
 
 # Logger File
-log_file = "occFactoDiffFreezeTraining3/training_stats.txt"
+log_file = os.path.join(train_folder, "training_stats.txt")
+
+def log_out_file(epoch, train_metrics, validation_metrics, log, b_loss, b_iou, b_chamfer, best):
+    # Train Info
+    print(f"Train - Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Binary Accuracy: {train_metrics['Avg_Bin_Accuracy']} {best}")
+    log.write(f"Train - Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Binary Accuracy: {train_metrics['Avg_Bin_Accuracy']} {best} \n")
+
+    # Validation Info
+    print(f"Validation - Epoch: {epoch + 1}, Loss: {validation_metrics['Avg_Loss']}, Binary Accuracy: {validation_metrics['Avg_Bin_Accuracy']}, IOU: {validation_metrics['Avg_IOU']}, ChamferL1: {validation_metrics['Avg_ChamferL1']} {best}")
+    log.write(f"Validation - Epoch: {epoch + 1}, Loss: {validation_metrics['Avg_Loss']}, Binary Accuracy: {validation_metrics['Avg_Bin_Accuracy']}, IOU: {validation_metrics['Avg_IOU']}, ChamferL1: {validation_metrics['Avg_ChamferL1']} {best} \n")
+
+    # Best info
+    print(f"Best Loss: {b_loss}, Best IOU: {b_iou}, Best Chamfer: {b_chamfer}")
 
 # Define the Train Loop
 def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, epochs):
-    best_loss = float("inf")
+
+    # Target Metrics
+    best_loss, best_iou, best_chamfer = float("inf"), -1*float("inf"), float("inf")
     
-    warmup, scheduler = scheduler
+    # Unpack
+    warmup, decay = scheduler
 
     with open(log_file, 'w') as log:
         for epoch in range(epochs):
@@ -97,10 +109,7 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
 
             # Trackers
             loss_track = []
-            accuracy_track = []
-            iou_track = []
-            chamfer_track = []
-            normal_track = []
+            in_accuracy_track = []
 
             iteration = 0
             for pcds in tqdm(train_dataset):
@@ -129,72 +138,85 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
                 optimizer.step()
 
                 # Warm Up Phase Per Spaghetti
-                if epoch * len(train_dataset) + iteration < warm_up_iter:
-                    warmup.step() 
+                # Built in Pytorch should stop when necessary
+                warmup.step() 
 
                 # Learning Rate Scheduler
                 if (epoch + 1) % decay_interval == 0: 
-                    scheduler.step()
+                    decay.step()
 
                 # Get Metrics
-                param_accuracy = (occTruths, occPreds)
-                metrics = trainer.metrics(param_accuracy)
+                bin_acc = trainer.get_accuracy(occTruths, occPreds)
 
-                # Load Trackers
+                # Load Train Trackers
                 loss_track.append(loss.item())
-                accuracy_track.append(metrics["accuracy"])
-                # iou_track.append(metrics["iou"])
-                # chamfer_track.append(metrics["chamfer"])
-                # normal_track.append(metrics["normal"])
+                in_accuracy_track.append(bin_acc)
 
             # Train Metrics
             train_metrics = {
                 "Avg_Loss": np.mean(loss_track),
-                "Avg_Accuracy": np.mean(accuracy_track)
+                "Avg_Bin_Accuracy": np.mean(in_accuracy_track)
             }
 
             # Get Validations Results / Metrics
+            # Implicitly calls visualize functiom
             validation_metrics = trainer.validation(validation_dataset, model, diffFacto, loss_f, epoch)
 
             # Save Checkpoint
-            # trainer.backup()
-            if (epoch + 1) % 100 == 0:
+            if (epoch + 1) % save_checkpoint == 0:
                 torch.save({
                     'epoch': epoch,
                     'model_state_dict': model.state_dict(),
                     'optimizer_state_dict': optimizer.state_dict(),
                     'train_metrics': train_metrics,
                     'validation_metrics': validation_metrics,
-                }, f"occFactoDiffFreezeTraining2/occFacto_epoch_{epoch}.pth")
-
-            # Save visualization
-            if (epoch + 1) % 100 == 0:
-                trainer.visualize()
+                }, f"{train_folder}/occFacto_epoch_{epoch}.pth")
 
             # Update Best Model
-            if validation_metrics["Avg_Loss"] < best_loss:
-                torch.save({
-                    'epoch': epoch,
-                    'model_state_dict': model.state_dict(),
-                    'optimizer_state_dict': optimizer.state_dict(),
-                    'loss': validation_metrics["Avg_Loss"]
-                }, f"occFactoDiffFreezeTraining2/occFacto_best_model.pth")
-                print(f"Train - Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Accuracy: {train_metrics['Avg_Accuracy']}, Best")
-                log.write(f"Train - Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Accuracy: {train_metrics['Avg_Accuracy']}, Best \n")
-                print(f"Validation - Epoch: {epoch + 1}, Loss: {validation_metrics['Avg_Loss']}, Accuracy: {validation_metrics['Avg_Accuracy']}, Best")
-                log.write(f"Validation - Epoch: {epoch + 1}, Loss: {validation_metrics['Avg_Loss']}, Accuracy: {validation_metrics['Avg_Accuracy']}, Best \n")
+            if (validation_metrics["Avg_Loss"] < best_loss or
+                validation_metrics["Avg_IOU"] > best_iou or
+                validation_metrics["Avg_ChamferL1"] < best_chamfer):
+
+                if validation_metrics["Avg_Loss"] < best_loss:
+                    torch.save({
+                        'epoch': epoch,
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'metrics': validation_metrics
+                    }, f"{train_folder}/occFacto_best_model_loss.pth")
+                    best_loss = validation_metrics["Avg_Loss"]
+
+                if validation_metrics["Avg_IOU"] > best_iou:
+                    torch.save({
+                        'epoch': epoch,
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'metrics': validation_metrics
+                    }, f"{train_folder}/occFacto_best_model_iou.pth")
+                    best_iou = validation_metrics["Avg_IOU"]
+
+                if validation_metrics["Avg_ChamferL1"] < best_chamfer:
+                    torch.save({
+                        'epoch': epoch,
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'metrics': validation_metrics
+                    }, f"{train_folder}/occFacto_best_model_chamfer.pth")
+                    best_chamfer = validation_metrics["Avg_ChamferL1"]
                 
-            # trainer.update_best_model(train_metrics, validation_metrics, model)
+                # Log Values and Print Values
+                log_out_file(epoch, train_metrics, validation_metrics, log, best_loss, best_iou, best_chamfer, best="Best")
+
             else:
                 # Log Values and Print Values
-                print(f"Train - Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Accuracy: {train_metrics['Avg_Accuracy']}")
-                log.write(f"Train - Epoch: {epoch + 1}, Loss: {train_metrics['Avg_Loss']}, Accuracy: {train_metrics['Avg_Accuracy']} \n")
-                print(f"Validation - Epoch: {epoch + 1}, Loss: {validation_metrics['Avg_Loss']}, Accuracy: {validation_metrics['Avg_Accuracy']}")
-                log.write(f"Validation - Epoch: {epoch + 1}, Loss: {validation_metrics['Avg_Loss']}, Accuracy: {validation_metrics['Avg_Accuracy']} \n")
+                log_out_file(epoch, train_metrics, validation_metrics, log, best_loss, best_iou, best_chamfer, best='')
 
-        # Save params after training
-        # trainer.save_checkpoint(final=True)
-        torch.save(model.state_dict(), f"occFactoDiffFreezeTraining3/occFacto_final{epoch}.pth")
+        torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'metrics': validation_metrics
+                }, f"{train_folder}/occFacto_final{epoch}.pth")
 
 # Train the Model
 train_loop(train_dataset, log_file, occFacto, optimizer, (warmup, decay), trainer, epochs)

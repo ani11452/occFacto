@@ -22,3 +22,4 @@ src/python/occFacto/models/occFactoDiffFreezeTraining3/
 testnpz/03001627.zip
 
 *.so
+*.pth

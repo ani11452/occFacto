@@ -14,7 +14,7 @@ from pointnet2_ops import pointnet2_utils
 
 # From Occupancy Network
 from occFacto.train.data.fields import PointsField, PointCloudField
-from occFacto.train.data.transforms import SubsamplePointsHalf, SubsamplePointcloud
+from occFacto.train.data.transforms import SubsamplePointsHalf, SubsamplePointcloud, SubsamplePointcloudHalf
 
 
 @DATASETS.register_module()
@@ -436,6 +436,7 @@ class _ShapeNetSegParts(_ShapeNetSeg):
             part_scale_mode=part_scale_mode,
             clip=clip
         )
+        self.split = split
         
     def __getitem__(self, index):
         if index in self.cache: # The initial slef.cache is an empty dictionary, which is used to store the retrieved data and place it according to (point_set, cls, seg) while avoiding repeated sampling
@@ -555,38 +556,73 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         occs = (points, occupancies)
         '''
 
-        # Get Mesh Train Data Samples for Occupancy
-        # Load file paths
-        mesh_paths = "../../../../data/ShapeNet/03001627"
-        # transform = SubsamplePointsHalf(2048)
-        # transform_pcd = SubsamplePointcloud(2048)
-        transform = SubsamplePointsHalf(1024)
-        transform_pcd = SubsamplePointcloud(1024)
+        # LOAD FILE PATHS
+        mesh_paths = "../../../../data/occupancynetwork/03001627"
+
+        # GET MESH TRAIN DATA SAMPLES FOR OCCUPANCY
+        # Inside and Outside Fully:
+        transform = SubsamplePointsHalf(2048)
         ptsfield = PointsField("points.npz", transform)
+        path = os.path.join(mesh_paths, token)
+        data = ptsfield.load(path)
+
+        # Get the points and respective occupancies
+        points = data[None]
+        occupancies = data['occ']
+
+        # Convert to Torch
+        points = torch.FloatTensor(points)
+        occupancies = torch.FloatTensor(occupancies)
+        
+        '''
+        # Inside and Outside on the Local Surface
+        transform_pcd = SubsamplePointcloudHalf(1024)
         pcdsfield = PointCloudField("pointcloud.npz", transform_pcd)
         path = os.path.join(mesh_paths, token)
         data = ptsfield.load(path)
         pcdsdata = pcdsfield.load(path)
 
-        # Get the points and respective occupancies
-        points = torch.FloatTensor(data[None])
-        occupancies = torch.FloatTensor(data['occ'])
+        # Get the surface points and respective occupancies
+        s_points = data[None]
+        s_occupancies = data['occ']
 
+        # Convert to Torch
+        s_points = torch.FloatTensor(s_points)
+        s_occupancies = torch.FloatTensor(s_occupancies)
+
+        # Return Payload
+        points = torch.cat((points, s_points), dim=0)
+        occupancies = torch.cat((occupancies, s_occupancies), dim=0)
+        '''
+        occs = (points, occupancies)
+
+        '''
         # Get the points and respective occupancies
         pointcloud_chamfer = torch.FloatTensor(pcdsdata[None])
         pointcloud_chamfernorms = torch.FloatTensor(pcdsdata['normals'])
-        pointcloud_occs = torch.ones_like(occupancies)
+        pointcloud_yes_occs = torch.ones_like(torch.chunk(occupancies, chunks=2, dim=0))
+        pointcloud_no_occs = torch.zeros_like(torch.chunk(occupancies, chunks=2, dim=0))
 
         # Convert to Torch
         # points = torch.FloatTensor(points)
         # occupancies = torch.FloatTensor(occupancies)
 
         points = torch.cat((pointcloud_chamfer, points), dim=0)
-        occupancies = torch.cat((pointcloud_occs, occupancies), dim=0)
+        occupancies = torch.cat((pointcloud_yes_occs, pointcloud_no_occs, occupancies), dim=0)
+        '''
 
+        if self.split == 'test':
+            # Get Pointcloud and Normals for Eval Metrics
+            pcdsfield = PointCloudField("pointcloud.npz")
+            path = os.path.join(mesh_paths, token)
+            data = ptsfield.load(path)
+            pcdsdata = pcdsfield.load(path)
+            pointcloud_chamfer = pcdsdata[None]
+            pointcloud_chamfernorms = pcdsdata['normals']
+        else:
+            pointcloud_chamfer = torch.empty(1)
+            pointcloud_chamfernorms = torch.empty(1)
 
-        # Return Payload
-        occs = (points, occupancies)
         
         # Return the parameters needed for training
         return {

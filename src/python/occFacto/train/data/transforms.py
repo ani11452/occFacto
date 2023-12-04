@@ -52,6 +52,55 @@ class SubsamplePointcloud(object):
         data_out['normals'] = normals[indices, :]
 
         return data_out
+    
+
+class SubsamplePointcloudHalf(object):
+    ''' Point cloud subsampling transformation class with first half on the surface and second half outside 
+
+    It subsamples the point cloud data.
+
+    Args:
+        N (int): number of points to be subsampled
+    '''
+    def __init__(self, N):
+        self.N = N
+        self.tol = 0.01
+
+    def __call__(self, data):
+        ''' Calls the transformation.
+
+        Args:
+            data (dict): data dictionary
+        '''
+        data_out = data.copy()
+        points = data[None]
+        normals = data['normals']
+
+        # Randomly sample indices for generating points that are inside / outside
+        indices_in = np.random.randint(points.shape[0], size=self.N // 2)
+        indices_out = np.random.randint(points.shape[0], size=self.N // 2)
+
+        # Add a tolerance to the normals
+        points_out = points[indices_out, :] + self.tol * normals[indices_out, :]
+
+        # Get the points in the surface cover
+        points_in = points[indices_in, :]
+
+        # Concatenate the norms and points where first half is inside shape and second half is outside shape
+        pts = np.concatenate((points_in, points_out), axis=0)
+        occs = np.concatenate((np.ones(self.N // 2), np.zeros(self.N // 2)))
+
+        idx_shuffle = np.random.permutation(self.N)
+        points = points[idx_shuffle, :]
+        occs = occs[idx_shuffle]
+
+        data_out.update({
+                None: points,
+                'occ':  occs,
+            })
+
+        return data_out
+
 
 class SubsamplePointsHalf(object):
     ''' Points subsampling transformation class.
@@ -103,8 +152,8 @@ class SubsamplePointsHalf(object):
         occs = occs[idx_shuffle]
 
         data_out.update({
-                None: points[idx_shuffle, :],
-                'occ':  occs[idx_shuffle],
+                None: points,
+                'occ':  occs,
             })
 
         return data_out

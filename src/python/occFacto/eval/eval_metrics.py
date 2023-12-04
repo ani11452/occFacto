@@ -145,8 +145,8 @@ def distance_p2p(points_src, normals_src, points_tgt, normals_tgt):
         points_tgt (numpy array): target points
         normals_tgt (numpy array): target normals
     '''
-    print(points_tgt.shape)
-    print(points_src.shape)
+    # print(points_tgt.shape)
+    # print(points_src.shape)
 
     kdtree = KDTree(points_tgt)
     dist, idx = kdtree.query(points_src)

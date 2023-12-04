@@ -34,9 +34,6 @@ class Trainer():
         p = self.box_size * self.make_3d_grid((-0.5,)*3, (0.5,)*3, (self.resolution,)*3)
         self.p = p.unsqueeze(0)
 
-        # Precompute visualization
-        self.viz_latents = self.compute_viz_latents(encoder)
-
         # Save the train folder
         self.train_folder = train_folder
 
@@ -61,9 +58,6 @@ class Trainer():
                 latents = diffFacto(ex, device="cuda")
                 latents = torch.cat(tuple(latents), dim=1)
 
-                # Loss
-                loss_track.append(loss_f(occPreds, occTruths).item())
-
                 # Get Accuracy Comparison for Train Data
                 occPoints = ex["occs"][0].to("cuda")
                 occPreds = model(latents, occPoints)
@@ -71,16 +65,23 @@ class Trainer():
                 accuracy = self.get_accuracy(occTruths, occPreds)
                 bin_accuracy_track.append(accuracy)
 
+                # Loss
+                loss_track.append(loss_f(occPreds, occTruths).item())
+
                 # Calculate IOU, Chamfer Distance, Normal .
-                if ((epoch + 1) % self.mesh_eval_epoch == 0 and epoch != 0):
+                if (epoch + 1) % self.mesh_eval_epoch == 0:
                         outputs = self.eval_metrics(model, latents, ex)
                         for out in outputs:
-                            iou_track.append(out['iou'])
-                            chamferL1_track.append(out['chamfer-L1'])
-                            chamferL2_track.append(out['chamfer-L2'])
-                            dist_accuracy_track.append(out['accuracy'])
+                            if 'iou' in out:
+                                iou_track.append(out['iou'])
+                            if 'chamfer-L1' in out:
+                                chamferL1_track.append(out['chamfer-L1'])
+                            if 'chamfer-L2' in out:
+                                chamferL2_track.append(out['chamfer-L2'])
+                            if 'accuracy' in out:
+                                dist_accuracy_track.append(out['accuracy'])
 
-                if (epoch + 1) % 100 == 0 and viz < self.viz:
+                if (epoch + 1) % self.viz == 0 and viz < 5:
                     self.visualize(latents, ex['token'], model, epoch)
                     viz += 1
 
@@ -104,7 +105,7 @@ class Trainer():
         accuracy = correct_predictions.item() / total_predictions
         return accuracy
 
-    def eval_points(self, model, latents):
+    def eval_points(self, model, latents, one):
         '''
         Evaluates occupancy values for the points
 
@@ -114,24 +115,27 @@ class Trainer():
         model.eval()
 
         # Random Sample of Latent for Evaluation
-        lat_idxs = np.random.randint(latents.shape[0], size=self.mesh_bs)
+        if one:
+            lat_idxs = np.random.randint(latents.shape[0], size=1)
+        else:
+            lat_idxs = np.random.randint(latents.shape[0], size=self.mesh_bs)
 
         # p_split = torch.split(p, self.points_batch_size)
         occ_hats = []
 
-        p = p.to("cuda")
+        p = self.p.to("cuda")
         with torch.no_grad():
             for i in lat_idxs:
                 latent = latents[i].unsqueeze(0)
 
-                occ_h = model(latent, self.p)
+                occ_h = model(latent, p)
                 occ_hats.append((occ_h.detach().cpu(), i))
 
         return occ_hats
 
 
-    def generate_mesh(self, model, latents):
-        occ_hats = self.eval_points(model, latents)
+    def generate_mesh(self, model, latents, viz=False):
+        occ_hats = self.eval_points(model, latents, one=viz)
 
         all_verts = []
         all_triangles = []
@@ -167,7 +171,7 @@ class Trainer():
 
     # Function to evaluate the mesh
     def eval_metrics(self, model, latents, ex):
-        all_vertices, all_triangles, idxs = self.generate_mesh(model, latents)
+        all_vertices, all_triangles, idxs = self.generate_mesh(model, latents, viz=True)
         vsaandts = zip(all_vertices, all_triangles)
 
         res = []
@@ -189,8 +193,6 @@ class Trainer():
             normals_tgt = ex['pointcloud_chamfernorms'][idx].squeeze(0).numpy()
             points_tgt = ex['occs'][0][idx].squeeze(0).numpy()
             occ_tgt = ex['occs'][1][idx].squeeze(0).numpy()
-
-            print(pointcloud_tgt.shape, normals_tgt.shape, points_tgt.shape, occ_tgt.shape)
 
             eval_dict_mesh = self.evaluator.eval_mesh(mesh, pointcloud_tgt, normals_tgt, points_tgt, occ_tgt)
             res.append(eval_dict_mesh)
@@ -251,7 +253,7 @@ class Trainer():
     
 
     def visualize(self, latents, token, model, epoch):
-        all_vertices, all_triangles, idxs = self.generate_mesh(model, latents)
+        all_vertices, all_triangles, idxs = self.generate_mesh(model, latents, viz=True)
 
         vsaandts = zip(all_vertices, all_triangles)
 
@@ -259,7 +261,7 @@ class Trainer():
         for vertices, triangles in vsaandts:
             idx = idxs[i]
             tok = token[idx]
-            flname = tok + '_' + str(epoch) + '.dae'
+            flname = tok + '_' + "epoch_" + str(epoch) + '.dae'
             path = os.path.join(self.train_folder, flname)
             self.save_mesh(vertices, triangles, path)
 
