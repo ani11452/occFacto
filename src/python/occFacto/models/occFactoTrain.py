@@ -30,14 +30,14 @@ diffFacto = build_from_cfg(cfg.model,MODELS)
 diffFacto = diffFacto.encoder.to("cuda")
 
 # Create parameters for trainer class
-train_folder = "occFactoDiffFreezeTrainingLegitNoSurf"
+train_folder = "occFactoDiffFreezeTrainingLegitWithSurf"
 eval_mesh_every = 20
 bs_meshes = 2
 visualize_every = 50
 save_checkpoint = 50
 
 if not os.path.exists(train_folder):
-        os.makedirs(train_folder)
+    os.makedirs(train_folder)
 
 # Initialize the the Trainer class
 trainer = Trainer(diffFacto, train_folder, eval_mesh_every, bs_meshes, visualize_every)

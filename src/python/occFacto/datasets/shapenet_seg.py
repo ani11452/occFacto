@@ -561,7 +561,7 @@ class _ShapeNetSegParts(_ShapeNetSeg):
 
         # GET MESH TRAIN DATA SAMPLES FOR OCCUPANCY
         # Inside and Outside Fully:
-        transform = SubsamplePointsHalf(2048)
+        transform = SubsamplePointsHalf(1024)
         ptsfield = PointsField("points.npz", transform)
         path = os.path.join(mesh_paths, token)
         data = ptsfield.load(path)
@@ -574,7 +574,6 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         points = torch.FloatTensor(points)
         occupancies = torch.FloatTensor(occupancies)
         
-        '''
         # Inside and Outside on the Local Surface
         transform_pcd = SubsamplePointcloudHalf(1024)
         pcdsfield = PointCloudField("pointcloud.npz", transform_pcd)
@@ -593,7 +592,6 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         # Return Payload
         points = torch.cat((points, s_points), dim=0)
         occupancies = torch.cat((occupancies, s_occupancies), dim=0)
-        '''
         occs = (points, occupancies)
 
         '''

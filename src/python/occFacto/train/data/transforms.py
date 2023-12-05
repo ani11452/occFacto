@@ -64,7 +64,12 @@ class SubsamplePointcloudHalf(object):
     '''
     def __init__(self, N):
         self.N = N
-        self.tol = 0.01
+        self.tol = {
+            'mean': 0.01,
+            'std': 0.005,
+            'min': 0.0005,
+            'max': 0.025
+        }
 
     def __call__(self, data):
         ''' Calls the transformation.
@@ -80,8 +85,9 @@ class SubsamplePointcloudHalf(object):
         indices_in = np.random.randint(points.shape[0], size=self.N // 2)
         indices_out = np.random.randint(points.shape[0], size=self.N // 2)
 
-        # Add a tolerance to the normals
-        points_out = points[indices_out, :] + self.tol * normals[indices_out, :]
+        # Add a noise to the points via normals
+        tol = np.maximum(self.tol['min'], np.minimum(np.random.normal(self.tol['mean'], self.tol['std'], self.N // 2), self.tol['max']))
+        points_out = points[indices_out, :] + tol[:, np.newaxis] * normals[indices_out, :]
 
         # Get the points in the surface cover
         points_in = points[indices_in, :]
