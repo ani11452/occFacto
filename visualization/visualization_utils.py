@@ -11,22 +11,23 @@ class Visualizer():
     '''
     A class that takes in a .dae mesh and then visualizes a front, side, or isometric view
     '''
-    def __init__(self, token: str, 
+    def __init__(self, token: str, tag: str = "best",
                  background_color: str = "#2a2b2e",
                  mesh_color: str = "#ffffff",
                  view: str = "isometric"):
         pv.start_xvfb()
 
         self.token = token
-        self.token_path = os.path.join(FILE_ROOT, token)
-        dae_to_obj(self.token_path + '_best.dae', self.token_path + '_best.obj')
+        self.tag = tag
+        self.token_path = os.path.join(FILE_ROOT + f'_{tag}', token)
+        dae_to_obj(self.token_path + f'_{tag}.dae', self.token_path + f'_{tag}.obj')
 
         # View
         self.background_color = background_color
         self.mesh_color = mesh_color
         self.view = view
 
-        self.mesh = pv.read(self.token_path + '_best.obj')
+        self.mesh = pv.read(self.token_path + f'_{tag}.obj')
         self.plotter = pv.Plotter(off_screen=True)
         self.init_plotter()
 
@@ -63,7 +64,7 @@ class Visualizer():
         '''
         Saves the view of the mesh to a png
         '''
-        self.plotter.show(screenshot=f"{self.token}_{self.view}.png")
+        self.plotter.show(screenshot=f"{self.token}_{self.view}_{self.tag}.png")
 
 
 def dae_to_obj(dae_file_path, obj_file_path):
@@ -99,7 +100,7 @@ def dae_to_obj(dae_file_path, obj_file_path):
 
 
 class Mesher():
-    def __init__(self, model, save_dir):
+    def __init__(self, model, save_dir, tag: str="best"):
         self.device = 'cuda'
         self.model = model.eval()
 
@@ -114,6 +115,7 @@ class Mesher():
 
         # Save the train folder
         self.save_dir = save_dir
+        self.tag = tag
 
 
     def eval_points(self, latents):
@@ -147,8 +149,8 @@ class Mesher():
         vertices /= np.array([n_x-1, n_y-1, n_z-1])
         vertices = self.box_size * (vertices - 0.5)
         
-        print(os.path.join(self.save_dir, token) + "_best.dae")
-        self.save_mesh(vertices, triangles, os.path.join(self.save_dir, token) + "_best.dae")
+        print(os.path.join(self.save_dir, token) + f'_{self.tag}.dae')
+        self.save_mesh(vertices, triangles, os.path.join(self.save_dir, token) + f'_{self.tag}.dae')
 
         
     def make_3d_grid(self, bb_min, bb_max, shape):
