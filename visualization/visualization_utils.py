@@ -1,10 +1,11 @@
 import pyvista as pv
 import collada
 import numpy as np
-import math
 import os
+import torch
+import mcubes
 
-FILE_ROOT = "/home/cs236finalproject/diffFactoCS236/src/python/occFacto/models/occFactoDiffFreezeTrainingLegitWithSurf"
+FILE_ROOT = "./all_test"
 
 class Visualizer():
     '''
@@ -18,14 +19,14 @@ class Visualizer():
 
         self.token = token
         self.token_path = os.path.join(FILE_ROOT, token)
-        dae_to_obj(self.token_path + '.dae', self.token_path + '.obj')
+        dae_to_obj(self.token_path + '_best.dae', self.token_path + '_best.obj')
 
         # View
         self.background_color = background_color
         self.mesh_color = mesh_color
         self.view = view
 
-        self.mesh = pv.read(self.token_path + '.obj')
+        self.mesh = pv.read(self.token_path + '_best.obj')
         self.plotter = pv.Plotter(off_screen=True)
         self.init_plotter()
 
@@ -93,5 +94,84 @@ def dae_to_obj(dae_file_path, obj_file_path):
                     for tri in prim.vertex_index:
                         obj_file.write(f"f {' '.join([str(i+1) for i in tri])}\n")
 
-viz = Visualizer("def03f645b3fbd665bb93149cc0adf0_epoch_99", view="isometric")
-viz.save_view()
+
+
+
+
+class Mesher():
+    def __init__(self, model, save_dir):
+        self.device = 'cuda'
+        self.model = model.eval()
+
+        # Params for generating 3D grid
+        self.padding = 0.1
+        self.box_size = 1 + self.padding
+        self.resolution = 25
+
+        # Make occupancy grid
+        p = self.box_size * self.make_3d_grid((-0.5,)*3, (0.5,)*3, (self.resolution,)*3)
+        self.p = p.unsqueeze(0)
+
+        # Save the train folder
+        self.save_dir = save_dir
+
+
+    def eval_points(self, latents):
+        '''
+        Evaluates occupancy values for the points
+
+        p (tensor): points (100, 100, 100)
+        z (tensor): latent code (256, 1)
+        '''
+        self.model.eval()
+        with torch.no_grad():
+            p = self.p.to("cuda")
+            occ_h = self.model(latents, p)
+            return occ_h.detach().cpu()
+
+
+    def generate_mesh(self, latents, token):
+        occ_hat = self.eval_points(latents)
+
+        # Processes the points to be readable by marching cubes
+        occ_hat = occ_hat.view(self.resolution, self.resolution, self.resolution).numpy()
+
+        occ_hat = mcubes.smooth(occ_hat)
+
+        # Apply marching cubes algorithm
+        vertices, triangles = mcubes.marching_cubes(occ_hat, 0)
+
+        # Normalization
+        n_x, n_y, n_z = occ_hat.shape
+        vertices -= 1.5
+        vertices /= np.array([n_x-1, n_y-1, n_z-1])
+        vertices = self.box_size * (vertices - 0.5)
+        
+        print(os.path.join(self.save_dir, token) + "_best.dae")
+        self.save_mesh(vertices, triangles, os.path.join(self.save_dir, token) + "_best.dae")
+
+        
+    def make_3d_grid(self, bb_min, bb_max, shape):
+        ''' Makes a 3D grid.
+
+        Args:
+            bb_min (tuple): bounding box minimum
+            bb_max (tuple): bounding box maximum
+            shape (tuple): output shape
+        '''
+        size = shape[0] * shape[1] * shape[2]
+
+        pxs = torch.linspace(bb_min[0], bb_max[0], shape[0])
+        pys = torch.linspace(bb_min[1], bb_max[1], shape[1])
+        pzs = torch.linspace(bb_min[2], bb_max[2], shape[2])
+
+        pxs = pxs.view(-1, 1, 1).expand(*shape).contiguous().view(size)
+        pys = pys.view(1, -1, 1).expand(*shape).contiguous().view(size)
+        pzs = pzs.view(1, 1, -1).expand(*shape).contiguous().view(size)
+        p = torch.stack([pxs, pys, pzs], dim=1)
+
+        return p
+
+
+    def save_mesh(self, vertices, triangles, path):
+        mcubes.export_mesh(vertices, triangles, path)

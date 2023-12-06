@@ -22,15 +22,33 @@ from torch.optim import lr_scheduler
 
 from occFacto.models.occFactoModel import OccFacto
 from occFacto.eval.trainerOcc import Trainer
+from occFacto.runner.runner import Runner
+
+import collections
 
 # Get diffFacto encoder to generate latents
 init_cfg('/home/cs236finalproject/diffFactoCS236/src/config_files/gen_occ.py')
 cfg = get_cfg()
 diffFacto = build_from_cfg(cfg.model,MODELS)
+checkpoint = torch.load('/home/cs236finalproject/diffFactoCS236/diffFacto/pretrained/chair.pth')['model']
+
+# Parse the state dict keys 
+new_checkpoint = collections.OrderedDict()
+for key in checkpoint:
+    n_key = key
+    if key[0:7] == 'module.':
+        n_key = key[7:]
+    if 'diffusion' in key:
+        continue
+    new_checkpoint[n_key] = checkpoint[key]
+    
+# Get the diffFacto encoder
+diffFacto.load_state_dict(new_checkpoint)
 diffFacto = diffFacto.encoder.to("cuda")
+diffFacto.eval()
 
 # Create parameters for trainer class
-train_folder = "occFactoDiffFreezeTrainingLegitWithSurf"
+train_folder = "occFactoDiffFreezeTrainingLegitFrozenDiffFactoReg"
 eval_mesh_every = 20
 bs_meshes = 2
 visualize_every = 50
@@ -67,7 +85,8 @@ lr_start = learning_rate / warm_up_iter
 beta1 = 0.9
 beta2 = 0.999
 epsilon = 1e-8
-optimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon)
+lambda_value = 0.01 # L2 Regularization
+optimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon, weight_decay=lambda_value)
 
 # Warm Up
 warmup = lr_scheduler.LinearLR(optimizer, 1 / warm_up_iter, 1, warm_up_iter)
@@ -103,7 +122,7 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
 
     with open(log_file, 'w') as log:
         for epoch in range(epochs):
-
+            
             # Initialize model train
             model.train()
 

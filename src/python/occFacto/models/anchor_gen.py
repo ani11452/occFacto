@@ -132,7 +132,7 @@ class AnchorDiffAE(Module):
         self.reg_loss_weight=reg_loss_weight
         
         # lgan training
-        print(self)
+        # print(self)
 
     def train_language_module(self):
         self.language_encoder.train()
