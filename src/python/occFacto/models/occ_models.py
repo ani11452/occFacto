@@ -222,7 +222,7 @@ class TransformerLayer(nn.Module):
         x = x + self.mlp(self.norm2(x))
         return x
 
-    def __init__(self, dim_self, dim_ref, num_heads, mlp_ratio=4., bias=False, dropout=0.2, act=nnf.relu,
+    def __init__(self, dim_self, dim_ref, num_heads, mlp_ratio=4., bias=False, dropout=0., act=nnf.relu,
                  norm_layer: nn.Module = nn.LayerNorm):
         super().__init__()
         self.norm1 = norm_layer(dim_self)

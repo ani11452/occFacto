@@ -1,0 +1,218 @@
+Train - Epoch: 1, Loss: 0.6927432467540106, Binary Accuracy: 0.5029767237672018 Best 
+Validation - Epoch: 1, Loss: 0.6915802558263143, Binary Accuracy: 0.5325349171956381, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 2, Loss: 0.6883872027198473, Binary Accuracy: 0.695113421215559 Best 
+Validation - Epoch: 2, Loss: 0.6821576456228892, Binary Accuracy: 0.7855084737141927, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 3, Loss: 0.6557135085264841, Binary Accuracy: 0.7974859013105386 Best 
+Validation - Epoch: 3, Loss: 0.5982934633890787, Binary Accuracy: 0.7948392232259115, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 4, Loss: 0.48728329315781593, Binary Accuracy: 0.8097037248290642 Best 
+Validation - Epoch: 4, Loss: 0.42825234433015186, Binary Accuracy: 0.8182252248128256, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 5, Loss: 0.3836166200538476, Binary Accuracy: 0.8362556962062824 Best 
+Validation - Epoch: 5, Loss: 0.37206827104091644, Binary Accuracy: 0.842962900797526, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 6, Loss: 0.3524291664361954, Binary Accuracy: 0.8517545180947774 Best 
+Validation - Epoch: 6, Loss: 0.3541845728953679, Binary Accuracy: 0.8516934712727865, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 7, Loss: 0.34029171243309975, Binary Accuracy: 0.8573543318185601 Best 
+Validation - Epoch: 7, Loss: 0.3443150023619334, Binary Accuracy: 0.8557840983072916, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 8, Loss: 0.33152345071236294, Binary Accuracy: 0.861104718771185 Best 
+Validation - Epoch: 8, Loss: 0.33656860888004303, Binary Accuracy: 0.8584194183349609, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 9, Loss: 0.3257027330497901, Binary Accuracy: 0.863303995278268 Best 
+Validation - Epoch: 9, Loss: 0.32843421399593353, Binary Accuracy: 0.8628107706705729, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 10, Loss: 0.320070568472147, Binary Accuracy: 0.8659095574591866  
+Validation - Epoch: 10, Loss: 0.33100682000319165, Binary Accuracy: 0.86212158203125, IOU: nan, ChamferL1: nan  
+Train - Epoch: 11, Loss: 0.3165729120373726, Binary Accuracy: 0.8674807723509063 Best 
+Validation - Epoch: 11, Loss: 0.3214204063018163, Binary Accuracy: 0.8659172058105469, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 12, Loss: 0.3119707368314266, Binary Accuracy: 0.8700306029130195 Best 
+Validation - Epoch: 12, Loss: 0.3153686970472336, Binary Accuracy: 0.8687127431233724, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 13, Loss: 0.3093865675230821, Binary Accuracy: 0.8713181813557943  
+Validation - Epoch: 13, Loss: 0.31663865347703296, Binary Accuracy: 0.8683611551920573, IOU: nan, ChamferL1: nan  
+Train - Epoch: 14, Loss: 0.3060448132455349, Binary Accuracy: 0.8727959682452934 Best 
+Validation - Epoch: 14, Loss: 0.3119738648335139, Binary Accuracy: 0.8700383504231771, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 15, Loss: 0.30105869720379513, Binary Accuracy: 0.8752909596177781 Best 
+Validation - Epoch: 15, Loss: 0.310016006231308, Binary Accuracy: 0.8707472483317057, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 16, Loss: 0.2994137853384018, Binary Accuracy: 0.8756704869984852 Best 
+Validation - Epoch: 16, Loss: 0.3051916758219401, Binary Accuracy: 0.8738810221354166, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 17, Loss: 0.2985282229880492, Binary Accuracy: 0.876420274786993 Best 
+Validation - Epoch: 17, Loss: 0.3040809780359268, Binary Accuracy: 0.8739414215087891, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 18, Loss: 0.2987295674781005, Binary Accuracy: 0.8759342275263702 Best 
+Validation - Epoch: 18, Loss: 0.3035304049650828, Binary Accuracy: 0.8739827473958334, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 19, Loss: 0.295468566318353, Binary Accuracy: 0.8775215338494071  
+Validation - Epoch: 19, Loss: 0.3055694450934728, Binary Accuracy: 0.8737360636393229, IOU: nan, ChamferL1: nan  
+Train - Epoch: 20, Loss: 0.2927294795711835, Binary Accuracy: 0.8786964839387013 Best 
+Validation - Epoch: 20, Loss: 0.30296941101551056, Binary Accuracy: 0.8744786580403646, IOU: 0.6356843113899231, ChamferL1: 0.086597324659427 Best 
+Train - Epoch: 21, Loss: 0.28969362874825794, Binary Accuracy: 0.8806019981337615 Best 
+Validation - Epoch: 21, Loss: 0.29861387610435486, Binary Accuracy: 0.8760147094726562, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 22, Loss: 0.28766435260574025, Binary Accuracy: 0.881381941862427  
+Validation - Epoch: 22, Loss: 0.2986323485771815, Binary Accuracy: 0.8763440450032552, IOU: nan, ChamferL1: nan  
+Train - Epoch: 23, Loss: 0.2860464006662369, Binary Accuracy: 0.8819849935875755 Best 
+Validation - Epoch: 23, Loss: 0.2955189843972524, Binary Accuracy: 0.8771807352701823, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 24, Loss: 0.28416136900583905, Binary Accuracy: 0.8828143650603222 Best 
+Validation - Epoch: 24, Loss: 0.2918708225091298, Binary Accuracy: 0.8794485727945963, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 25, Loss: 0.2815033197402954, Binary Accuracy: 0.8844589793353999 Best 
+Validation - Epoch: 25, Loss: 0.28924230734507245, Binary Accuracy: 0.8807042439778646, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 26, Loss: 0.27964839960138005, Binary Accuracy: 0.885197165544609  
+Validation - Epoch: 26, Loss: 0.2896365573008855, Binary Accuracy: 0.8804206848144531, IOU: nan, ChamferL1: nan  
+Train - Epoch: 27, Loss: 0.27670510672032833, Binary Accuracy: 0.8866076309017451 Best 
+Validation - Epoch: 27, Loss: 0.28824782371520996, Binary Accuracy: 0.8807258605957031, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 28, Loss: 0.27512378556032974, Binary Accuracy: 0.8869566727851144  
+Validation - Epoch: 28, Loss: 0.28958093623320263, Binary Accuracy: 0.8807048797607422, IOU: nan, ChamferL1: nan  
+Train - Epoch: 29, Loss: 0.2739065991093715, Binary Accuracy: 0.8879618790536116 Best 
+Validation - Epoch: 29, Loss: 0.2869374454021454, Binary Accuracy: 0.8816331227620443, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 30, Loss: 0.27210645377635956, Binary Accuracy: 0.8885358378792393 Best 
+Validation - Epoch: 30, Loss: 0.285584236184756, Binary Accuracy: 0.8815517425537109, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 31, Loss: 0.2686841997007529, Binary Accuracy: 0.8900297380733199 Best 
+Validation - Epoch: 31, Loss: 0.28340919812520343, Binary Accuracy: 0.8837375640869141, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 32, Loss: 0.2673187181353569, Binary Accuracy: 0.8909938940579009  
+Validation - Epoch: 32, Loss: 0.2841349045435588, Binary Accuracy: 0.8831233978271484, IOU: nan, ChamferL1: nan  
+Train - Epoch: 33, Loss: 0.2656930809219678, Binary Accuracy: 0.8915994714159484  
+Validation - Epoch: 33, Loss: 0.28618937234083813, Binary Accuracy: 0.8833440144856771, IOU: nan, ChamferL1: nan  
+Train - Epoch: 34, Loss: 0.26405700917045277, Binary Accuracy: 0.8926192350708382 Best 
+Validation - Epoch: 34, Loss: 0.28131937980651855, Binary Accuracy: 0.8854910532633463, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 35, Loss: 0.2628252189606428, Binary Accuracy: 0.8929250903814939  
+Validation - Epoch: 35, Loss: 0.2846546322107315, Binary Accuracy: 0.8841902414957682, IOU: nan, ChamferL1: nan  
+Train - Epoch: 36, Loss: 0.26079138554632664, Binary Accuracy: 0.8935646281694418  
+Validation - Epoch: 36, Loss: 0.28874843815962475, Binary Accuracy: 0.8835334777832031, IOU: nan, ChamferL1: nan  
+Train - Epoch: 37, Loss: 0.2605750864992539, Binary Accuracy: 0.8943979091235986 Best 
+Validation - Epoch: 37, Loss: 0.28092574576536816, Binary Accuracy: 0.8865941365559896, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 38, Loss: 0.2600577423969905, Binary Accuracy: 0.8938860776592102  
+Validation - Epoch: 38, Loss: 0.28584182759126026, Binary Accuracy: 0.8837483723958334, IOU: nan, ChamferL1: nan  
+Train - Epoch: 39, Loss: 0.2593432093660037, Binary Accuracy: 0.894543958366464  
+Validation - Epoch: 39, Loss: 0.28271275758743286, Binary Accuracy: 0.8853995005289713, IOU: nan, ChamferL1: nan  
+Train - Epoch: 40, Loss: 0.25358088811238605, Binary Accuracy: 0.8973074148918876 Best 
+Validation - Epoch: 40, Loss: 0.282046635945638, Binary Accuracy: 0.8864561716715494, IOU: 0.6338220238685608, ChamferL1: 0.0839946319659551 Best 
+Train - Epoch: 41, Loss: 0.25384164166947204, Binary Accuracy: 0.8972184096636758 Best 
+Validation - Epoch: 41, Loss: 0.2775691747665405, Binary Accuracy: 0.8870353698730469, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 42, Loss: 0.2500907884289821, Binary Accuracy: 0.8991457373359517  
+Validation - Epoch: 42, Loss: 0.2825305958588918, Binary Accuracy: 0.8865814208984375, IOU: nan, ChamferL1: nan  
+Train - Epoch: 43, Loss: 0.24965973074237505, Binary Accuracy: 0.8988704200184673  
+Validation - Epoch: 43, Loss: 0.2827962338924408, Binary Accuracy: 0.8863989512125651, IOU: nan, ChamferL1: nan  
+Train - Epoch: 44, Loss: 0.24580448120832443, Binary Accuracy: 0.9010676710612913  
+Validation - Epoch: 44, Loss: 0.28079098959763843, Binary Accuracy: 0.8876501719156901, IOU: nan, ChamferL1: nan  
+Train - Epoch: 45, Loss: 0.24528022607167563, Binary Accuracy: 0.9013713171722691  
+Validation - Epoch: 45, Loss: 0.28833987315495807, Binary Accuracy: 0.8867263793945312, IOU: nan, ChamferL1: nan  
+Train - Epoch: 46, Loss: 0.24353091853360334, Binary Accuracy: 0.9020387812856505  
+Validation - Epoch: 46, Loss: 0.2799450804789861, Binary Accuracy: 0.8876698811848959, IOU: nan, ChamferL1: nan  
+Train - Epoch: 47, Loss: 0.24011101759970188, Binary Accuracy: 0.9036626494988025  
+Validation - Epoch: 47, Loss: 0.2781333327293396, Binary Accuracy: 0.88897705078125, IOU: nan, ChamferL1: nan  
+Train - Epoch: 48, Loss: 0.238653264939785, Binary Accuracy: 0.9043700148206238  
+Validation - Epoch: 48, Loss: 0.2881583372751872, Binary Accuracy: 0.8867969512939453, IOU: nan, ChamferL1: nan  
+Train - Epoch: 49, Loss: 0.23880415533979735, Binary Accuracy: 0.904615946136848  
+Validation - Epoch: 49, Loss: 0.2807186742623647, Binary Accuracy: 0.8888448079427084, IOU: nan, ChamferL1: nan  
+Train - Epoch: 50, Loss: 0.23792708975573382, Binary Accuracy: 0.904833016410151  
+Validation - Epoch: 50, Loss: 0.2867475003004074, Binary Accuracy: 0.8868122100830078, IOU: nan, ChamferL1: nan  
+Train - Epoch: 51, Loss: 0.23790692227582136, Binary Accuracy: 0.9049676040626083  
+Validation - Epoch: 51, Loss: 0.29489514728387195, Binary Accuracy: 0.8876171112060547, IOU: nan, ChamferL1: nan  
+Train - Epoch: 52, Loss: 0.23515011183917522, Binary Accuracy: 0.9063816158049697 Best 
+Validation - Epoch: 52, Loss: 0.27663760880629223, Binary Accuracy: 0.889489491780599, IOU: nan, ChamferL1: nan Best 
+Train - Epoch: 53, Loss: 0.2312482794125875, Binary Accuracy: 0.9079149301628089  
+Validation - Epoch: 53, Loss: 0.2800933023293813, Binary Accuracy: 0.8902149200439453, IOU: nan, ChamferL1: nan  
+Train - Epoch: 54, Loss: 0.22991933052738509, Binary Accuracy: 0.9089635344455731  
+Validation - Epoch: 54, Loss: 0.2842291792233785, Binary Accuracy: 0.8880329132080078, IOU: nan, ChamferL1: nan  
+Train - Epoch: 55, Loss: 0.22442465275526047, Binary Accuracy: 0.9114002802320941  
+Validation - Epoch: 55, Loss: 0.28929536044597626, Binary Accuracy: 0.8883660634358724, IOU: nan, ChamferL1: nan  
+Train - Epoch: 56, Loss: 0.22350563295185566, Binary Accuracy: 0.9116279021680173  
+Validation - Epoch: 56, Loss: 0.28485559423764545, Binary Accuracy: 0.8893216451009115, IOU: nan, ChamferL1: nan  
+Train - Epoch: 57, Loss: 0.22336841995517412, Binary Accuracy: 0.9119132826452226  
+Validation - Epoch: 57, Loss: 0.29220933715502423, Binary Accuracy: 0.8874041239420573, IOU: nan, ChamferL1: nan  
+Train - Epoch: 58, Loss: 0.2226977807780107, Binary Accuracy: 0.9123600251084074  
+Validation - Epoch: 58, Loss: 0.29136568307876587, Binary Accuracy: 0.8876355489095052, IOU: nan, ChamferL1: nan  
+Train - Epoch: 59, Loss: 0.22099759429693222, Binary Accuracy: 0.9129849850949162  
+Validation - Epoch: 59, Loss: 0.28931736946105957, Binary Accuracy: 0.8889624277750651, IOU: nan, ChamferL1: nan  
+Train - Epoch: 60, Loss: 0.21908827560643354, Binary Accuracy: 0.9137259871223287 Best 
+Validation - Epoch: 60, Loss: 0.274966225028038, Binary Accuracy: 0.8907203674316406, IOU: 0.46557915210723877, ChamferL1: 0.07983790586392085 Best 
+Train - Epoch: 61, Loss: 0.22051733856399855, Binary Accuracy: 0.9132737734266742  
+Validation - Epoch: 61, Loss: 0.28041374186674756, Binary Accuracy: 0.8901799519856771, IOU: nan, ChamferL1: nan  
+Train - Epoch: 62, Loss: 0.21614900045096874, Binary Accuracy: 0.915698248312014  
+Validation - Epoch: 62, Loss: 0.28528329233328503, Binary Accuracy: 0.8893356323242188, IOU: nan, ChamferL1: nan  
+Train - Epoch: 63, Loss: 0.21440216402212778, Binary Accuracy: 0.9159843651891119  
+Validation - Epoch: 63, Loss: 0.2853376815716426, Binary Accuracy: 0.8891932169596354, IOU: nan, ChamferL1: nan  
+Train - Epoch: 64, Loss: 0.21437793100873628, Binary Accuracy: 0.9160874742980397  
+Validation - Epoch: 64, Loss: 0.29384597142537433, Binary Accuracy: 0.8875751495361328, IOU: nan, ChamferL1: nan  
+Train - Epoch: 65, Loss: 0.21345410558084646, Binary Accuracy: 0.916707126372451  
+Validation - Epoch: 65, Loss: 0.2982078194618225, Binary Accuracy: 0.8887583414713541, IOU: nan, ChamferL1: nan  
+Train - Epoch: 66, Loss: 0.20959540146092573, Binary Accuracy: 0.9184598324860273  
+Validation - Epoch: 66, Loss: 0.29584379494190216, Binary Accuracy: 0.8879241943359375, IOU: nan, ChamferL1: nan  
+Train - Epoch: 67, Loss: 0.20814673167963824, Binary Accuracy: 0.9192872543218303  
+Validation - Epoch: 67, Loss: 0.3162176012992859, Binary Accuracy: 0.8862628936767578, IOU: nan, ChamferL1: nan  
+Train - Epoch: 68, Loss: 0.20677442414065203, Binary Accuracy: 0.9196354664793803  
+Validation - Epoch: 68, Loss: 0.3077758302291234, Binary Accuracy: 0.8871892293294271, IOU: nan, ChamferL1: nan  
+Train - Epoch: 69, Loss: 0.20824268149832884, Binary Accuracy: 0.9192983119859607  
+Validation - Epoch: 69, Loss: 0.31161612272262573, Binary Accuracy: 0.8881187438964844, IOU: nan, ChamferL1: nan  
+Train - Epoch: 70, Loss: 0.20462537991503874, Binary Accuracy: 0.9205782756163804  
+Validation - Epoch: 70, Loss: 0.3095025171836217, Binary Accuracy: 0.8893013000488281, IOU: nan, ChamferL1: nan  
+Train - Epoch: 71, Loss: 0.20275276402632395, Binary Accuracy: 0.9213945406292557  
+Validation - Epoch: 71, Loss: 0.3271952470143636, Binary Accuracy: 0.882422129313151, IOU: nan, ChamferL1: nan  
+Train - Epoch: 72, Loss: 0.20284772043426832, Binary Accuracy: 0.9214274073959491  
+Validation - Epoch: 72, Loss: 0.31225693722565967, Binary Accuracy: 0.8870099385579427, IOU: nan, ChamferL1: nan  
+Train - Epoch: 73, Loss: 0.20092839375138283, Binary Accuracy: 0.9224471258460928  
+Validation - Epoch: 73, Loss: 0.30552583436171216, Binary Accuracy: 0.8891766866048177, IOU: nan, ChamferL1: nan  
+Train - Epoch: 74, Loss: 0.2016009222716093, Binary Accuracy: 0.9221249574550431  
+Validation - Epoch: 74, Loss: 0.3135225772857666, Binary Accuracy: 0.8875751495361328, IOU: nan, ChamferL1: nan  
+Train - Epoch: 75, Loss: 0.19795536560316881, Binary Accuracy: 0.9236322047149005  
+Validation - Epoch: 75, Loss: 0.324211910367012, Binary Accuracy: 0.8864936828613281, IOU: nan, ChamferL1: nan  
+Train - Epoch: 76, Loss: 0.19709211277465025, Binary Accuracy: 0.9241844900522027  
+Validation - Epoch: 76, Loss: 0.3245656689008077, Binary Accuracy: 0.8834425608317057, IOU: nan, ChamferL1: nan  
+Train - Epoch: 77, Loss: 0.19497704257567725, Binary Accuracy: 0.9251258672195108  
+Validation - Epoch: 77, Loss: 0.322107195854187, Binary Accuracy: 0.8884201049804688, IOU: nan, ChamferL1: nan  
+Train - Epoch: 78, Loss: 0.1958026842524608, Binary Accuracy: 0.9249247848440748  
+Validation - Epoch: 78, Loss: 0.3251803070306778, Binary Accuracy: 0.8862298329671224, IOU: nan, ChamferL1: nan  
+Train - Epoch: 79, Loss: 0.19506162715454897, Binary Accuracy: 0.9252910264041446  
+Validation - Epoch: 79, Loss: 0.31172986328601837, Binary Accuracy: 0.8889268239339193, IOU: nan, ChamferL1: nan  
+Train - Epoch: 80, Loss: 0.19512584122518697, Binary Accuracy: 0.9250290299045201 Best 
+Validation - Epoch: 80, Loss: 0.3333700895309448, Binary Accuracy: 0.8844598134358724, IOU: 0.5956633687019348, ChamferL1: 0.06999725289642811 Best 
+Train - Epoch: 81, Loss: 0.19087738109131655, Binary Accuracy: 0.9271523886864338  
+Validation - Epoch: 81, Loss: 0.3198646108309428, Binary Accuracy: 0.8879547119140625, IOU: nan, ChamferL1: nan  
+Train - Epoch: 82, Loss: 0.18937448598444462, Binary Accuracy: 0.9279932071674125  
+Validation - Epoch: 82, Loss: 0.3383883982896805, Binary Accuracy: 0.8836968739827474, IOU: nan, ChamferL1: nan  
+Train - Epoch: 83, Loss: 0.18928199261426926, Binary Accuracy: 0.9277068628083676  
+Validation - Epoch: 83, Loss: 0.35187117258707684, Binary Accuracy: 0.882378896077474, IOU: nan, ChamferL1: nan  
+Train - Epoch: 84, Loss: 0.18720952483514944, Binary Accuracy: 0.9287991684146611  
+Validation - Epoch: 84, Loss: 0.3475861003001531, Binary Accuracy: 0.8846441904703776, IOU: nan, ChamferL1: nan  
+Train - Epoch: 85, Loss: 0.18837482233842215, Binary Accuracy: 0.9283660107067236  
+Validation - Epoch: 85, Loss: 0.34513438244660694, Binary Accuracy: 0.8855463663736979, IOU: nan, ChamferL1: nan  
+Train - Epoch: 86, Loss: 0.1849383016427358, Binary Accuracy: 0.9297148722027421  
+Validation - Epoch: 86, Loss: 0.358082855741183, Binary Accuracy: 0.8813273111979166, IOU: nan, ChamferL1: nan  
+Train - Epoch: 87, Loss: 0.18520739550391832, Binary Accuracy: 0.9297712921002589  
+Validation - Epoch: 87, Loss: 0.3343474318583806, Binary Accuracy: 0.8849366505940756, IOU: nan, ChamferL1: nan  
+Train - Epoch: 88, Loss: 0.18532663211226463, Binary Accuracy: 0.9297846114599012  
+Validation - Epoch: 88, Loss: 0.3561980376640956, Binary Accuracy: 0.8829822540283203, IOU: nan, ChamferL1: nan  
+Train - Epoch: 89, Loss: 0.1830225350956122, Binary Accuracy: 0.9306504937851465  
+Validation - Epoch: 89, Loss: 0.36250850558280945, Binary Accuracy: 0.88067626953125, IOU: nan, ChamferL1: nan  
+Train - Epoch: 90, Loss: 0.18348662244776884, Binary Accuracy: 0.9307503437777177  
+Validation - Epoch: 90, Loss: 0.34548310935497284, Binary Accuracy: 0.8826471964518229, IOU: nan, ChamferL1: nan  
+Train - Epoch: 91, Loss: 0.18179600623746714, Binary Accuracy: 0.9311678868914962  
+Validation - Epoch: 91, Loss: 0.3596511383851369, Binary Accuracy: 0.8799997965494791, IOU: nan, ChamferL1: nan  
+Train - Epoch: 92, Loss: 0.18020850916703543, Binary Accuracy: 0.932144151915104  
+Validation - Epoch: 92, Loss: 0.35301657021045685, Binary Accuracy: 0.8806304931640625, IOU: nan, ChamferL1: nan  
+Train - Epoch: 93, Loss: 0.18192391532162824, Binary Accuracy: 0.9313145325453638  
+Validation - Epoch: 93, Loss: 0.3553594599167506, Binary Accuracy: 0.8799018859863281, IOU: nan, ChamferL1: nan  
+Train - Epoch: 94, Loss: 0.17995217318336168, Binary Accuracy: 0.9322347101450695  
+Validation - Epoch: 94, Loss: 0.3524997631708781, Binary Accuracy: 0.8817240397135416, IOU: nan, ChamferL1: nan  
+Train - Epoch: 95, Loss: 0.1774283479899168, Binary Accuracy: 0.9332050358483551  
+Validation - Epoch: 95, Loss: 0.38018106917540234, Binary Accuracy: 0.8799648284912109, IOU: nan, ChamferL1: nan  
+Train - Epoch: 96, Loss: 0.17696253520747027, Binary Accuracy: 0.9333884052544924  
+Validation - Epoch: 96, Loss: 0.3763480136791865, Binary Accuracy: 0.8802897135416666, IOU: nan, ChamferL1: nan  
+Train - Epoch: 97, Loss: 0.17648000891009966, Binary Accuracy: 0.9334829560842719  
+Validation - Epoch: 97, Loss: 0.38532716532548267, Binary Accuracy: 0.8793792724609375, IOU: nan, ChamferL1: nan  
+Train - Epoch: 98, Loss: 0.17694643139839172, Binary Accuracy: 0.9331759006605237  
+Validation - Epoch: 98, Loss: 0.3865857223669688, Binary Accuracy: 0.8778610229492188, IOU: nan, ChamferL1: nan  
+Train - Epoch: 99, Loss: 0.17466539206604162, Binary Accuracy: 0.9343567361160886  
+Validation - Epoch: 99, Loss: 0.37789177397886914, Binary Accuracy: 0.8799959818522135, IOU: nan, ChamferL1: nan  
+Train - Epoch: 100, Loss: 0.17357853427529335, Binary Accuracy: 0.9349313788457748 Best 
+Validation - Epoch: 100, Loss: 0.36267652610937756, Binary Accuracy: 0.8834578196207682, IOU: 0.45182251930236816, ChamferL1: 0.06997834146022797 Best 
+Train - Epoch: 101, Loss: 0.17316471288601556, Binary Accuracy: 0.9350600738408733  
+Validation - Epoch: 101, Loss: 0.35782985389232635, Binary Accuracy: 0.8817691802978516, IOU: nan, ChamferL1: nan  
+Train - Epoch: 102, Loss: 0.17159770987927914, Binary Accuracy: 0.9356555953302879  
+Validation - Epoch: 102, Loss: 0.39541496833165485, Binary Accuracy: 0.8817170461018881, IOU: nan, ChamferL1: nan  
+Train - Epoch: 103, Loss: 0.16974810510873795, Binary Accuracy: 0.9364028662352023  
+Validation - Epoch: 103, Loss: 0.36417847871780396, Binary Accuracy: 0.8826128641764323, IOU: nan, ChamferL1: nan  
+Train - Epoch: 104, Loss: 0.17012304564317068, Binary Accuracy: 0.9364563682392832  
+Validation - Epoch: 104, Loss: 0.3810144861539205, Binary Accuracy: 0.8760471343994141, IOU: nan, ChamferL1: nan  
+Train - Epoch: 105, Loss: 0.1694700332979361, Binary Accuracy: 0.9368743371526036  
+Validation - Epoch: 105, Loss: 0.40179019172986347, Binary Accuracy: 0.8802420298258463, IOU: nan, ChamferL1: nan  
+Train - Epoch: 106, Loss: 0.17025934097667536, Binary Accuracy: 0.9363665784899977  
+Validation - Epoch: 106, Loss: 0.3777090907096863, Binary Accuracy: 0.8775952657063802, IOU: nan, ChamferL1: nan  
+Train - Epoch: 107, Loss: 0.1689219189186891, Binary Accuracy: 0.9367479038530169  
+Validation - Epoch: 107, Loss: 0.35814709961414337, Binary Accuracy: 0.8795852661132812, IOU: nan, ChamferL1: nan  
+Train - Epoch: 108, Loss: 0.1687046755105257, Binary Accuracy: 0.9369036079546728  
+Validation - Epoch: 108, Loss: 0.3809574047724406, Binary Accuracy: 0.8792095184326172, IOU: nan, ChamferL1: nan  
+Train - Epoch: 109, Loss: 0.16844816009203592, Binary Accuracy: 0.9371917415467242  
+Validation - Epoch: 109, Loss: 0.3679920931657155, Binary Accuracy: 0.8801651000976562, IOU: nan, ChamferL1: nan  

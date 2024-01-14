@@ -79,7 +79,7 @@ dataset = dict(
     ),
     val=dict(
         type="ShapeNetSegPart",
-        batch_size= 128,
+        batch_size=128,
         split='test',
         root='/home/cs236finalproject/diffFactoCS236/diffFacto',
         npoints=2048,
@@ -117,4 +117,5 @@ log_interval = 50
 max_norm=10
 # model_only=True
 train_aligner=True
-resume_path="../diffFacto/pretrained/chair.pth"
+resume_path="/home/cs236finalproject/diffFactoCS236/diffFacto/pretrained/chair.pth"
+pretrained_weights="/home/cs236finalproject/diffFactoCS236/diffFacto/pretrained/chair.pth"

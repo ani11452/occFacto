@@ -48,7 +48,7 @@ diffFacto = diffFacto.encoder.to("cuda")
 diffFacto.eval()
 
 # Create parameters for trainer class
-train_folder = "occFactoDiffFreezeTrainingLegitFrozenDiffFactoReg"
+train_folder = "occFacto2024RepResults"
 eval_mesh_every = 20
 bs_meshes = 2
 visualize_every = 50
@@ -85,8 +85,10 @@ lr_start = learning_rate / warm_up_iter
 beta1 = 0.9
 beta2 = 0.999
 epsilon = 1e-8
-lambda_value = 0.01 # L2 Regularization
-optimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon, weight_decay=lambda_value)
+# lambda_value = 0.0001 # L2 Regularization
+# coptimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon, weight_decay=lambda_value)
+optimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon)
+
 
 # Warm Up
 warmup = lr_scheduler.LinearLR(optimizer, 1 / warm_up_iter, 1, warm_up_iter)
@@ -144,7 +146,7 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
 
                 # Model outputs
                 occPoints = pcds["occs"][0].to("cuda")
-                occPreds = model(latents, occPoints)
+                occPreds = model(latents, occPoints) # + 1e-10
 
                 # Get Truths
                 occTruths = pcds["occs"][1].to("cuda")

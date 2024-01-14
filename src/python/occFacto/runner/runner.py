@@ -4,7 +4,7 @@ import numpy as np
 from occFacto.utils.misc import fps
 from occFacto.datasets.evaluation_utils import compute_all_metrics
 from tqdm import tqdm
-from occFacto.config.config import get_cfg, save_cfg, save_args
+from occFacto.config.config import get_cfg, save_cfg, save_args, init_cfg
 from occFacto.utils.registry import build_from_cfg, MODELS, DATASETS, OPTIMS, SCHEDULERS, HOOKS
 from occFacto.utils.misc import check_file, build_file, search_ckpt, check_interval, sync, parse_losses
 import pickle
@@ -16,30 +16,32 @@ from occFacto.utils import dist_utils
 from einops import rearrange
 
 class Runner:
-    def __init__(self, device, args):
+    def __init__(self, device):
+        print("Runing runner")
+        init_cfg('/home/cs236finalproject/diffFactoCS236/src/config_files/gen_occ.py')
         cfg = get_cfg()
 
-        if args.local_rank == 0:
-            self.logger = build_from_cfg(cfg.logger,HOOKS,work_dir=cfg.work_dir)
-        else:
-            self.logger = None
+        # if args.local_rank == 0:
+        #     self.logger = build_from_cfg(cfg.logger,HOOKS,work_dir=cfg.work_dir)
+        # else:
+        #     self.logger = None
             
-        print(cfg.work_dir)
-        self.distributed = args.distributed
-        self.no_eval=args.no_eval
-        self.local_rank = args.local_rank
-        self.world_size = args.world_size
-        self.short_val = args.short_val
-        self.eval_both = cfg.eval_both
-        self.eval_whole= cfg.eval_whole
-        self.prefix=args.prefix
+        # print(cfg.work_dir)
+        # self.distributed = args.distributed
+        # self.no_eval=args.no_eval
+        # self.local_rank = args.local_rank
+        # self.world_size = args.world_size
+        # self.short_val = args.short_val
+        # self.eval_both = cfg.eval_both
+        # self.eval_whole= cfg.eval_whole
+        # self.prefix=args.prefix
 
-        if args.seed is not None:
-            if self.logger is not None:
-                self.logger.print_log(f'Set random seed to {args.seed}, 'f'deterministic: {args.deterministic}')
-            misc.set_random_seed(args.seed + args.local_rank, deterministic=args.deterministic) # seed + rank, for augmentation
-        if args.distributed:
-            assert args.local_rank == torch.distributed.get_rank() 
+        # if args.seed is not None:
+        #     if self.logger is not None:
+        #         self.logger.print_log(f'Set random seed to {args.seed}, 'f'deterministic: {args.deterministic}')
+        #     misc.set_random_seed(args.seed + args.local_rank, deterministic=args.deterministic) # seed + rank, for augmentation
+        # if args.distributed:
+        #     assert args.local_rank == torch.distributed.get_rank() 
         self.cfg = cfg
         self.work_dir = cfg.work_dir
         self.save_num_batch = cfg.save_num_batch
@@ -57,74 +59,75 @@ class Runner:
         self.max_norm = cfg.max_norm
         self.model = build_from_cfg(cfg.model,MODELS)
         if device=='cuda':
-            self.model.to(self.local_rank)
+            self.model.to('cuda')
 
-        if args.distributed:
-            # Sync BN
-            if args.sync_bn:
-                self.model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(self.model)
-                if self.logger is not None:
-                    self.logger.print_log('Using Synchronized BatchNorm ...')
-            self.model = nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank % torch.cuda.device_count()], find_unused_parameters=True)
-            if self.logger is not None:
-                self.logger.print_log('Using Distributed Data parallel ...')
-        else:
-            if self.logger is not None:
-                self.logger.print_log('Using Data parallel ...')
-            self.model = nn.DataParallel(self.model).cuda()
+        # if args.distributed:
+        #     # Sync BN
+        #     if args.sync_bn:
+        #         self.model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(self.model)
+        #         if self.logger is not None:
+        #             self.logger.print_log('Using Synchronized BatchNorm ...')
+        #     self.model = nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank % torch.cuda.device_count()], find_unused_parameters=True)
+        #     if self.logger is not None:
+        #         self.logger.print_log('Using Distributed Data parallel ...')
+        # else:
+        #     if self.logger is not None:
+        #         self.logger.print_log('Using Data parallel ...')
+        #     self.model = nn.DataParallel(self.model).cuda()
         
         # optimizer & scheduler
-        if cfg.train_aligner:
-            if cfg.joint_train:
-                lr_scale = cfg.lr_scale if cfg.lr_scale is not None else 1.0
-                parameters = [{'params': [], 'lr': lr_scale, 'name': 'base_group'}, {'params': [], 'name': 'aligner_group'}]
-                for n, p in self.model.named_parameters():
-                    if 'part_aligner' in n:
-                        print(f"{n}: {cfg.optimizer.lr}")
-                        parameters[1]['params'].append(p)
-                    else:
-                        print(f"{n}: {cfg.optimizer.lr * lr_scale}")
-                        parameters[0]['params'].append(p)
-            else:
-                parameters = self.model.module.encoder.part_aligner.parameters()
-        elif cfg.train_cvae:
-            parameters = list(self.model.module.encoder.part_aligner.parameters()) + list(self.model.module.encoder.cvae_encoder.parameters())
-            if hasattr(self.model.module.encoder, 'ref_encoder'):
-                parameters += list(self.model.module.encoder.ref_encoder.parameters())
-        else:
-            parameters = self.model.parameters()
+        # if cfg.train_aligner:
+        #     if cfg.joint_train:
+        #         lr_scale = cfg.lr_scale if cfg.lr_scale is not None else 1.0
+        #         parameters = [{'params': [], 'lr': lr_scale, 'name': 'base_group'}, {'params': [], 'name': 'aligner_group'}]
+        #         for n, p in self.model.named_parameters():
+        #             if 'part_aligner' in n:
+        #                 print(f"{n}: {cfg.optimizer.lr}")
+        #                 parameters[1]['params'].append(p)
+        #             else:
+        #                 print(f"{n}: {cfg.optimizer.lr * lr_scale}")
+        #                 parameters[0]['params'].append(p)
+        #     else:
+        #         parameters = self.model.module.encoder.part_aligner.parameters()
+        # elif cfg.train_cvae:
+        #     parameters = list(self.model.module.encoder.part_aligner.parameters()) + list(self.model.module.encoder.cvae_encoder.parameters())
+        #     if hasattr(self.model.module.encoder, 'ref_encoder'):
+        #         parameters += list(self.model.module.encoder.ref_encoder.parameters())
+        # else:
+        #     parameters = self.model.parameters()
             
-        self.optimizer = build_from_cfg(cfg.optimizer,OPTIMS,params=parameters)
-        self.scheduler = build_from_cfg(cfg.scheduler, SCHEDULERS, optimizer=self.optimizer)
+        # self.optimizer = build_from_cfg(cfg.optimizer,OPTIMS,params=parameters)
+        # self.scheduler = build_from_cfg(cfg.scheduler, SCHEDULERS, optimizer=self.optimizer)
 
-        if self.distributed:
-            assert cfg.dataset.train.batch_size % self.world_size == 0
-            cfg.dataset.train.batch_size = cfg.dataset.train.batch_size // self.world_size
-        self.train_dataset, self.train_sampler = build_from_cfg(cfg.dataset.train,DATASETS, distributed=args.distributed)
-        self.val_dataset, _ = build_from_cfg(cfg.dataset.val,DATASETS, distributed=False)
-        self.cimle = cfg.cimle
-        self.cimle_start_epoch = cfg.cimle_start_epoch if cfg.cimle_start_epoch is not None else 0
-        self.cache_interval = cfg.cimle_cache_interval
+        # if self.distributed:
+        #     assert cfg.dataset.train.batch_size % self.world_size == 0
+        #     cfg.dataset.train.batch_size = cfg.dataset.train.batch_size // self.world_size
+        # self.train_dataset, self.train_sampler = build_from_cfg(cfg.dataset.train,DATASETS, distributed=args.distributed)
+        # self.val_dataset, _ = build_from_cfg(cfg.dataset.val,DATASETS, distributed=False)
+        # self.cimle = cfg.cimle
+        # self.cimle_start_epoch = cfg.cimle_start_epoch if cfg.cimle_start_epoch is not None else 0
+        # self.cache_interval = cfg.cimle_cache_interval
         
-        # only save file in the 0th process
-        if  self.local_rank == 0:
-            save_file = build_file(self.work_dir,prefix="config.yaml")
-            save_arg = build_file(self.work_dir,prefix="args.yaml")
-            save_args(save_arg, args)
-            save_cfg(save_file)
+        # # only save file in the 0th process
+        # if  self.local_rank == 0:
+        #     save_file = build_file(self.work_dir,prefix="config.yaml")
+        #     save_arg = build_file(self.work_dir,prefix="args.yaml")
+        #     save_args(save_arg, args)
+        #     save_cfg(save_file)
 
 
-        self.iter = 0
-        self.epoch = 0
+        # self.iter = 0
+        # self.epoch = 0
 
-        if self.max_epoch:
-            if (self.train_dataset):
-                self.total_iter = self.max_epoch * len(self.train_dataset)
-            else:
-                self.total_iter = 0
-        else:
-            self.total_iter = self.max_iter
+        # if self.max_epoch:
+        #     if (self.train_dataset):
+        #         self.total_iter = self.max_epoch * len(self.train_dataset)
+        #     else:
+        #         self.total_iter = 0
+        # else:
+        #     self.total_iter = self.max_iter
 
+        print("Pretrained, ", cfg.pretrained_weights)
         if (cfg.pretrained_weights):
             self.load(cfg.pretrained_weights, model_only=cfg.model_only)
         
@@ -142,19 +145,20 @@ class Runner:
             return self.iter>=self.max_iter
     
     def run(self):
-        if self.logger is not None:
-            self.logger.print_log("Start running")
+        return self.model
+        # if self.logger is not None:
+        #     self.logger.print_log("Start running")
         
-        while not self.finish:
-            if self.distributed:
-                self.train_sampler.set_epoch(self.epoch)
-            if self.cimle and self.epoch >= self.cimle_start_epoch and check_interval(self.epoch - self.cimle_start_epoch, self.cache_interval) and self.local_rank == 0:
-                self.cache_noise()
-            self.train()
-            if check_interval(self.epoch,self.eval_interval) and self.local_rank == 0:
-                self.val()
-            if check_interval(self.epoch,self.checkpoint_interval) and self.local_rank == 0:
-                self.save()
+        # while not self.finish:
+        #     if self.distributed:
+        #         self.train_sampler.set_epoch(self.epoch)
+        #     if self.cimle and self.epoch >= self.cimle_start_epoch and check_interval(self.epoch - self.cimle_start_epoch, self.cache_interval) and self.local_rank == 0:
+        #         self.cache_noise()
+        #     self.train()
+        #     if check_interval(self.epoch,self.eval_interval) and self.local_rank == 0:
+        #         self.val()
+        #     if check_interval(self.epoch,self.checkpoint_interval) and self.local_rank == 0:
+        #         self.save()
     
     @torch.no_grad()
     def cache_noise(self):
@@ -491,16 +495,16 @@ class Runner:
         
     
     def load(self, load_path, model_only=False):
-        map_location = {'cuda:%d' % 0: 'cuda:%d' % self.local_rank}
-        resume_data = torch.load(load_path, map_location=map_location)
+        # map_location = {'cuda:%d' % 0: 'cuda:%d' % self.local_rank}
+        resume_data = torch.load(load_path)
 
-        if (not model_only):
-            meta = resume_data.get("meta",dict())
-            self.epoch = meta.get("epoch",self.epoch)
-            self.iter = meta.get("iter",self.iter)
-            self.max_iter = meta.get("max_iter",self.max_iter)
-            self.max_epoch = meta.get("max_epoch",self.max_epoch)
-            self.scheduler.load_state_dict(resume_data.get("scheduler",dict()))
+        # if (not model_only):
+        #     meta = resume_data.get("meta",dict())
+        #     self.epoch = meta.get("epoch",self.epoch)
+        #     self.iter = meta.get("iter",self.iter)
+        #     self.max_iter = meta.get("max_iter",self.max_iter)
+        #     self.max_epoch = meta.get("max_epoch",self.max_epoch)
+        #     self.scheduler.load_state_dict(resume_data.get("scheduler",dict()))
             # self.optimizer.load_state_dict(resume_data.get("optimizer",dict()))
         #base_ckpt = {k.replace("module.", ""): v for k, v in resume_data['model'].items()}
         state_dict = resume_data['model']
@@ -509,18 +513,17 @@ class Runner:
         for k in state_dict.keys():
             if k in model_state_dict.keys():
                 if state_dict[k].shape != model_state_dict[k].shape:
-                    self.logger.print_log(f"Skip loading parameter: {k}, "
-                                f"required shape: {model_state_dict[k].shape}, "
-                                f"loaded shape: {state_dict[k].shape}")
+                    # self.logger.print_log(f"Skip loading parameter: {k}, "
+                    #             f"required shape: {model_state_dict[k].shape}, "
+                    #             f"loaded shape: {state_dict[k].shape}")
                     state_dict[k] = model_state_dict[k]
-            else:
-                self.logger.print_log(f"Dropping parameter {k}")
+                # self.logger.print_log(f"Dropping parameter {k}")
         for k in model_state_dict.keys():
             if k not in state_dict.keys():
                 print(f"Layer {k} not loaded!")
         self.model.load_state_dict(state_dict,strict=False)
 
-        self.logger.print_log(f"Loading model parameters from {load_path}")
+        # self.logger.print_log(f"Loading model parameters from {load_path}")
 
     def resume(self):
         self.load(self.resume_path, model_only=self.cfg.model_only)

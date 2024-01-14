@@ -198,7 +198,7 @@ class _ShapeNetSeg(Dataset):
             data = np.loadtxt(fn[1]).astype(np.float32) # size 20488,7 read in this txt file, a total of 20488 points, each point xyz rgb + sub category label
             present = [0]*self.num_class
             
-            seg = data[:, -1].astype(np.long) - self.seg_classes[self.class_choice][0] # Get the label of the sub category
+            seg = data[:, -1].astype(np.longlong) - self.seg_classes[self.class_choice][0] # Get the label of the sub category
             for i in range(self.num_class):
                 idx = seg == i 
                 if idx.any():
@@ -223,7 +223,7 @@ class _ShapeNetSeg(Dataset):
                 point_set = data[:, 0:3]
             else:
                 point_set = data[:, 0:6]
-            seg = data[:, -1].astype(np.long) - self.seg_classes[self.class_choice][0] # Get the label of the sub category
+            seg = data[:, -1].astype(np.longlong) - self.seg_classes[self.class_choice][0] # Get the label of the sub category
 
 
             if len(self.cache) < self.cache_size:
@@ -454,7 +454,7 @@ class _ShapeNetSegParts(_ShapeNetSeg):
                 point_set = data[:, 0:3]
             else:
                 point_set = data[:, 0:6]
-            seg = data[:, -1].astype(np.long) - self.seg_classes[self.class_choice][0] # Get the label of the sub category
+            seg = data[:, -1].astype(np.longlong) - self.seg_classes[self.class_choice][0] # Get the label of the sub category
 
 
             if len(self.cache) < self.cache_size:
@@ -557,11 +557,12 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         '''
 
         # LOAD FILE PATHS
-        mesh_paths = "../../../../data/occupancynetwork/03001627"
+        # mesh_paths = "../../../../data/occupancynetwork/03001627"
+        mesh_paths = '/home/cs236finalproject/diffFactoCS236/data/occupancynetwork/03001627'
 
         # GET MESH TRAIN DATA SAMPLES FOR OCCUPANCY
         # Inside and Outside Fully:
-        transform = SubsamplePointsHalf(1024)
+        transform = SubsamplePointsHalf(2048)
         ptsfield = PointsField("points.npz", transform)
         path = os.path.join(mesh_paths, token)
         data = ptsfield.load(path)
@@ -574,6 +575,7 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         points = torch.FloatTensor(points)
         occupancies = torch.FloatTensor(occupancies)
         
+        '''
         # Inside and Outside on the Local Surface
         transform_pcd = SubsamplePointcloudHalf(1024)
         pcdsfield = PointCloudField("pointcloud.npz", transform_pcd)
@@ -592,6 +594,7 @@ class _ShapeNetSegParts(_ShapeNetSeg):
         # Return Payload
         points = torch.cat((points, s_points), dim=0)
         occupancies = torch.cat((occupancies, s_occupancies), dim=0)
+        '''
         occs = (points, occupancies)
 
         '''
@@ -644,3 +647,23 @@ class _ShapeNetSegParts(_ShapeNetSeg):
             'pointcloud_chamfer': pointcloud_chamfer,
             'pointcloud_chamfernorms': pointcloud_chamfernorms,
         } # pointset is point cloud data, cls has 16 categories, and seg is a small category corresponding to different points in the data
+
+    # def get_data_by_token(self, token):
+    #     # Iterate through the datapath to find the entry with the matching token
+    #     for idx, (cat, path) in enumerate(self.datapath):
+    #         current_token = os.path.splitext(os.path.basename(path))[0]
+    #         if current_token == token:
+    #             data = np.loadtxt(path).astype(np.float32)
+    #             # Process data as needed...
+                
+    #             if not self.normal_channel:  # Determine whether to use rgb information
+    #                 point_set = data[:, 0:3]
+    #             else:
+    #                 point_set = data[:, 0:6]
+
+    #             # Return the processed data
+    #             return processed_data
+
+    #     # If token not found, return None or raise an exception
+    #     return None
+        
