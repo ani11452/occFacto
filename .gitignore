@@ -23,3 +23,5 @@ testnpz/03001627.zip
 
 *.so
 *.pth
+
+/src/external/build/

@@ -48,11 +48,11 @@ diffFacto = diffFacto.encoder.to("cuda")
 diffFacto.eval()
 
 # Create parameters for trainer class
-train_folder = "occFacto2024RepResults"
+train_folder = "occFacto2024RepResultsUppedPointsBatched"
 eval_mesh_every = 20
 bs_meshes = 2
 visualize_every = 50
-save_checkpoint = 50
+save_checkpoint = 25
 
 if not os.path.exists(train_folder):
     os.makedirs(train_folder)
@@ -131,14 +131,16 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
             # Trackers
             loss_track = []
             in_accuracy_track = []
-
             iteration = 0
+            bin_acc = 0
+            accum = 0
+
+            # Zero Grad
+            optimizer.zero_grad()
+
             for pcds in tqdm(train_dataset):
                 # Update iteration
                 iteration += 1
-                
-                # Zero Grad
-                optimizer.zero_grad()
 
                 # Pass through diffFacto encoder to extract latents
                 latents = diffFacto(pcds, device="cuda")
@@ -146,32 +148,42 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
 
                 # Model outputs
                 occPoints = pcds["occs"][0].to("cuda")
-                occPreds = model(latents, occPoints) # + 1e-10
+                occPreds = model(latents, occPoints) + 1e-10
 
                 # Get Truths
                 occTruths = pcds["occs"][1].to("cuda")
 
                 # Loss:
-                loss = loss_f(occPreds, occTruths)
+                loss = loss_f(occPreds, occTruths) / 16
                 loss.backward()
-
-                # Optimizer Step
-                optimizer.step()
-
-                # Warm Up Phase Per Spaghetti
-                # Built in Pytorch should stop when necessary
-                warmup.step() 
-
-                # Learning Rate Scheduler
-                if (epoch + 1) % decay_interval == 0: 
-                    decay.step()
+                accum += loss.item()
 
                 # Get Metrics
-                bin_acc = trainer.get_accuracy(occTruths, occPreds)
+                bin_acc += trainer.get_accuracy(occTruths, occPreds)
+                # bin_acc = trainer.get_accuracy(occTruths, occPreds)
+                
+                if (iteration % 16 == 0) or (iteration == len(train_dataset)):
+                    # Optimizer Step 
+                    optimizer.step()
+                    
+                    # Warm Up Phase Per Spaghetti
+                    # Built in Pytorch should stop when necessary
+                    warmup.step() 
 
-                # Load Train Trackers
-                loss_track.append(loss.item())
-                in_accuracy_track.append(bin_acc)
+                    # Zero Grad
+                    optimizer.zero_grad()
+
+                    # Load Train Trackers
+                    loss_track.append(accum / 16) # loss.item()
+                    in_accuracy_track.append(bin_acc / 16) # bin_acc / 16
+
+                    # Reset
+                    bin_acc = 0
+                    accum = 0
+
+            # Learning Rate Scheduler
+            if (epoch + 1) % decay_interval == 0: 
+                decay.step()
 
             # Train Metrics
             train_metrics = {

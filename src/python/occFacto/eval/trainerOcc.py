@@ -48,9 +48,12 @@ class Trainer():
         chamferL2_track = []
         dist_accuracy_track = []
 
-
+        # Counters
         viz = 0
-        for ex in data:
+        acc_accum = 0
+        loss_accum = 0
+
+        for iter, ex in enumerate(data):
             # Pass through diffFacto encoder to extract latents
             with torch.no_grad():
 
@@ -62,14 +65,21 @@ class Trainer():
                 occPoints = ex["occs"][0].to("cuda")
                 occPreds = model(latents, occPoints)
                 occTruths = ex["occs"][1].to("cuda")
-                accuracy = self.get_accuracy(occTruths, occPreds)
-                bin_accuracy_track.append(accuracy)
 
-                # Loss
-                loss_track.append(loss_f(occPreds, occTruths).item())
+                acc_accum += self.get_accuracy(occTruths, occPreds)
+                loss_accum += loss_f(occPreds, occTruths).item()
 
-                # Calculate IOU, Chamfer Distance, Normal .
-                if (epoch + 1) % self.mesh_eval_epoch == 0:
+                if (iter + 1) % 16 == 0:
+
+                    bin_accuracy_track.append(acc_accum / 16)
+                    loss_track.append(loss_accum / 16)
+                        
+                    # Reset
+                    acc_accum = 0
+                    loss_accum = 0
+
+                    # Calculate IOU, Chamfer Distance, Normal .
+                    if (epoch + 1) % self.mesh_eval_epoch == 0:
                         outputs = self.eval_metrics(model, latents, ex)
                         for out in outputs:
                             if 'iou' in out:
@@ -81,9 +91,9 @@ class Trainer():
                             if 'accuracy' in out:
                                 dist_accuracy_track.append(out['accuracy'])
 
-                if (epoch + 1) % self.viz == 0 and viz < 5:
-                    self.visualize(latents, ex['token'], model, epoch)
-                    viz += 1
+                    if (epoch + 1) % self.viz == 0 and viz < 5:
+                        self.visualize(latents, ex['token'], model, epoch)
+                        viz += 1
 
         # Val Metrics
         val_metrics = {
