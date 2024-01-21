@@ -16,7 +16,6 @@ from pointnet2_ops import pointnet2_utils
 from occFacto.train.data.fields import PointsField, PointCloudField
 from occFacto.train.data.transforms import SubsamplePointsHalf, SubsamplePointcloud, SubsamplePointcloudHalf
 
-
 @DATASETS.register_module()
 def ShapeNetSegPart(
     batch_size, 

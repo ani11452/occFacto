@@ -48,7 +48,7 @@ diffFacto = diffFacto.encoder.to("cuda")
 diffFacto.eval()
 
 # Create parameters for trainer class
-train_folder = "occFacto2024RepResultsUppedPointsBatched"
+train_folder = "occFacto2024RepResultsUppedPointsBatchedLRChangeReg"
 eval_mesh_every = 20
 bs_meshes = 2
 visualize_every = 50
@@ -77,7 +77,7 @@ loss_f = nn.BCEWithLogitsLoss()
 epochs = 3000
 
 # Learning Rate Settings: Warm-up and Decay
-learning_rate = 5e-4
+learning_rate = 2.5e-4
 warm_up_iter = 1000
 lr_start = learning_rate / warm_up_iter
 
@@ -85,17 +85,16 @@ lr_start = learning_rate / warm_up_iter
 beta1 = 0.9
 beta2 = 0.999
 epsilon = 1e-8
-# lambda_value = 0.0001 # L2 Regularization
-# coptimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon, weight_decay=lambda_value)
-optimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon)
-
+lambda_value = 0.0001 # L2 Regularization
+optimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon, weight_decay=lambda_value)
+# optimizer = optim.Adam(occFacto.parameters(), lr=learning_rate, betas=(beta1, beta2), eps=epsilon)
 
 # Warm Up
 warmup = lr_scheduler.LinearLR(optimizer, 1 / warm_up_iter, 1, warm_up_iter)
 
 # Decay
 decay_factor = 0.9
-decay_interval = 120
+decay_interval = 15
 decay = lr_scheduler.ExponentialLR(optimizer, gamma=decay_factor)
 
 # Logger File
@@ -174,7 +173,7 @@ def train_loop(train_dataset, log_file, model, optimizer, scheduler, trainer, ep
                     optimizer.zero_grad()
 
                     # Load Train Trackers
-                    loss_track.append(accum / 16) # loss.item()
+                    loss_track.append(accum) # loss.item()
                     in_accuracy_track.append(bin_acc / 16) # bin_acc / 16
 
                     # Reset

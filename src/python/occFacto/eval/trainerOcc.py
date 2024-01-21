@@ -16,7 +16,7 @@ class Trainer():
         # Params for generating 3D grid
         self.padding = 0.1
         self.box_size = 1 + self.padding
-        self.resolution = 25
+        self.resolution = 100
 
         self.device = 'cuda'
 
