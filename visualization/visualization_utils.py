@@ -5,13 +5,16 @@ import os
 import torch
 import mcubes
 
-FILE_ROOT = "./all_test"
+# FILE_ROOT = "./all_test"
 
 class Visualizer():
     '''
     A class that takes in a .dae mesh and then visualizes a front, side, or isometric view
     '''
-    def __init__(self, token: str, tag: str = "best",
+    def __init__(self,
+                 token: str, 
+                 file_root: str,
+                 tag: str = "best",
                  background_color: str = "#2a2b2e",
                  mesh_color: str = "#ffffff",
                  view: str = "isometric"):
@@ -19,7 +22,8 @@ class Visualizer():
 
         self.token = token
         self.tag = tag
-        self.token_path = os.path.join(FILE_ROOT + f'_{tag}', token)
+        # self.token_path = os.path.join(file_root2 + f'_{tag}', token)
+        self.token_path = os.path.join(file_root, token)
         dae_to_obj(self.token_path + f'_{tag}.dae', self.token_path + f'_{tag}.obj')
 
         # View
@@ -107,7 +111,7 @@ class Mesher():
         # Params for generating 3D grid
         self.padding = 0.1
         self.box_size = 1 + self.padding
-        self.resolution = 25
+        self.resolution = 100
 
         # Make occupancy grid
         p = self.box_size * self.make_3d_grid((-0.5,)*3, (0.5,)*3, (self.resolution,)*3)
@@ -172,6 +176,7 @@ class Mesher():
         pzs = pzs.view(1, 1, -1).expand(*shape).contiguous().view(size)
         p = torch.stack([pxs, pys, pzs], dim=1)
 
+        print("P ", p.shape)
         return p
 
 
